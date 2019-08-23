@@ -10,4 +10,4 @@ What is there is a cloud based Platform as a Service that we could use for no ET
 
 ## Architecture
 
-![alt text](https://github.com/balakreshnan/IIoT-AI/tree/master/IIoT/IIoTTimeSeriesArch.jpg "Architecture")
+![alt text](https://github.com/balakreshnan/IIoT-AI/blob/master/IIoT/IIoTTimeSeriesArch.jpg "Architecture")
