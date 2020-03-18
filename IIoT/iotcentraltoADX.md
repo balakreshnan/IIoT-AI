@@ -1,4 +1,4 @@
-# IoT Central Export data to Azure Data Explorer and ADLS gen2 for long term storage.
+# Azure IoT Central Export data to Azure Data Explorer and ADLS gen2 for long term storage.
 
 ## Using mxchips to push data out to Azure IoT Central to Azure Data Explorer.
 
