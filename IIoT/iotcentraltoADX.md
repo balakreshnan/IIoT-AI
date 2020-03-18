@@ -81,7 +81,9 @@ Go to Export and then configure 2 options.
 - Export to Blob Storage
 - Export to Event Hub
 
-For Blob storage select the above iotcentraltelemetry container as output. You can select all 3 telemetry, devices and deviceTemplates to output or choice is yours.
+For Blob storage select the above iotcentraltelemetry container as output. You can select all 3 telemetry, devices and deviceTemplates to output or choice is yours. 
+
+Data is stored every minute and stored as JSON format file.
 
 For the Event hub Select only telemetry and select the iotcentraltelemetry as event hub name. Event hub name space are shown in drop down box.
 
