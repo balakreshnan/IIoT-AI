@@ -111,3 +111,133 @@ now you can run query to validate and see if the data is loaded
 iotcentraltelemetry
 | limit 200
 ```
+
+Lets do some charting
+
+```
+iotcentraltelemetry
+| extend ingesttime = ingestion_time()
+| project ingesttime,humidity,temperature,pressure, accelerometer_x,accelerometer_y,accelerometer_z
+| summarize avgHumidity=avg(humidity) ,avgPressure=avg(pressure), avgTemperature=avg(temperature)
+by bin(ingesttime, 1m)
+| render timechart 
+```
+
+Now lets chart only 2 sensor points
+
+```
+iotcentraltelemetry
+| extend ingesttime = ingestion_time()
+| project ingesttime,humidity,temperature,pressure, accelerometer_x,accelerometer_y,accelerometer_z
+| summarize avgHumidity=avg(humidity) ,avgTemperature=avg(temperature)
+by bin(ingesttime, 1m)
+| render timechart 
+```
+
+the above query aggregates every 1 minutes
+
+Now lets aggregate data every 15 minute
+
+```
+iotcentraltelemetry
+| extend ingesttime = ingestion_time()
+| project ingesttime,humidity,temperature,pressure, accelerometer_x,accelerometer_y,accelerometer_z
+| summarize avgHumidity=avg(humidity) ,avgTemperature=avg(temperature)
+by bin(ingesttime, 15m)
+| render timechart 
+```
+
+These queries are sample to do ETL on read rather than aggregating and storing it
+
+Hourly Aggregate
+
+```
+iotcentraltelemetry
+| extend ingesttime = ingestion_time()
+| project ingesttime,humidity,temperature,pressure, accelerometer_x,accelerometer_y,accelerometer_z
+| summarize avgHumidity=avg(humidity) ,avgTemperature=avg(temperature)
+by bin(ingesttime, 1h)
+| render timechart 
+```
+
+Daily averages
+
+```
+iotcentraltelemetry
+| extend ingesttime = ingestion_time()
+| project ingesttime,humidity,temperature,pressure, accelerometer_x,accelerometer_y,accelerometer_z
+| summarize avgHumidity=avg(humidity) ,avgTemperature=avg(temperature)
+by bin(ingesttime, 1d)
+| render timechart 
+```
+
+Anamoly detection
+
+```
+let min_t = datetime(2020-03-18);
+let max_t = datetime(2020-03-19 22:00);
+let dt = 1h;
+iotcentraltelemetry
+| extend ingesttime = ingestion_time() 
+| make-series temperature=avg(temperature) on ingesttime from min_t to max_t step dt
+| extend (anomalies, score, baseline) = series_decompose_anomalies(temperature, 1.5, -1, 'linefit')
+| render anomalychart with(anomalycolumns=anomalies, title='Temp, anomalies') 
+```
+
+Time series forecasting
+
+```
+let min_t = datetime(2020-03-18);
+let max_t = datetime(2020-03-19 22:00);
+let dt = 1h;
+let horizon=7d;
+iotcentraltelemetry
+| extend ingesttime = ingestion_time() 
+| make-series temperature=avg(temperature) on ingesttime from min_t to max_t step dt
+| extend forecast = series_decompose_forecast(temperature, toint(horizon/dt))
+| render timechart with(title='Temp, forecasting the next week by Time Series Decomposition')
+```
+
+Machine learning
+
+Clustering sample
+
+```
+let min_t = toscalar(iotcentraltelemetry | extend ingesttime = ingestion_time()  | summarize min(ingesttime));  
+let max_t = toscalar(iotcentraltelemetry  | extend ingesttime = ingestion_time() | summarize max(ingesttime));  
+iotcentraltelemetry
+| extend ingesttime = ingestion_time() 
+| make-series num=count() on ingesttime from min_t to max_t step 10m
+| render timechart with(title="Temperature over a week, 10 minutes resolution")
+```
+
+```
+let min_t=datetime(2020-03-18);
+iotcentraltelemetry
+| extend ingesttime = ingestion_time() 
+| make-series num=count() on ingesttime from min_t to min_t+24h step 1m
+| render timechart with(title="Zoom on the 2nd spike, 1 minute resolution")
+```
+
+AutoCluster
+
+```
+let min_peak_t=datetime(2020-03-18);
+let max_peak_t=datetime(2020-03-19 22:00);
+iotcentraltelemetry
+| extend ingesttime = ingestion_time() 
+| where ingesttime between(min_peak_t..max_peak_t)
+| evaluate autocluster()
+```
+
+```
+let min_peak_t=datetime(2020-03-18);
+let max_peak_t=datetime(2020-03-19 22:00);
+iotcentraltelemetry
+| extend ingesttime = ingestion_time() 
+| where ingesttime between(min_peak_t..max_peak_t)
+| evaluate basket()
+```
+
+End of machine learning queries
+
