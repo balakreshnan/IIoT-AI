@@ -97,3 +97,24 @@ dotnet run "opcuadevice" --deviceconnectionstring="HostName=xxxxxxx.azure-device
 Adjust the connection string and also the path for publishednodes.json.
 
 Configure the visual studio code to monitor the iot hub. 
+
+Sample output from above samples was 
+
+```
+[
+  {
+    "Random.Int1": "14"
+  },
+  {
+    "Random.Boolean": "true"
+  },
+  {
+    "Random.Int1": "14"
+  },
+  {
+    "Random.Boolean": "true"
+  }
+]
+```
+
+Now time to move the data in to Azure data explorer to run some root cause and trend analysis.
