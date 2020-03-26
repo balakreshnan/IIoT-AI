@@ -9,6 +9,23 @@
 
 Connect to industrial Devices using OPC UA and subscribe for tags to collect data and push to Iot Hub for further processing
 
+Business Use case:
+
+- Root Cause Analysis
+- Predective Maintenance
+- Reliability
+- Quality
+- OEE
+
+Technical Use case:
+
+- Collecting data for time series like historian using azure data explorer
+- Root cause analytis and Trending using Azure Time Series Insights
+- OPC UA based data collection for Industry X.0
+- OPC DA to UA using tuneller or conversion tools.
+- OEE using custom queries in Azure Time Series Insights
+
+
 ## Steps
 
 - Download Integrtionobjects OPC UA simulator
