@@ -203,8 +203,6 @@ opcdata1
 
 ![alt text](https://github.com/balakreshnan/IIoT-AI/blob/master/IIoT/images/adx2.jpg "Architecture")
 
-
-
 ## Condition Based Monitoring
 
 ![alt text](https://github.com/balakreshnan/IIoT-AI/blob/master/IIoT/images/opcuasimualation2.jpg "Architecture")
