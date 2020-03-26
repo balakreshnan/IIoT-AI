@@ -28,11 +28,11 @@ Business Use case:
 Technical Use case:
 
 - Collecting data for time series like historian using azure data explorer
-- Root cause analytis and Trending using Azure Time Series Insights
+- Root cause analysis and Trending using Azure Time Series Insights
 - OPC UA based data collection for Industry X.0
 - OPC DA to UA using tunneller or conversion tools.
 - OEE using custom queries in Azure Time Series Insights
-- Anomalies can be detected using trending and patterns using Azure Time Series Insights.
+- Visual Anomalies can be detected using trending and patterns using Azure Time Series Insights.
 - Production troubleshooting for technicians to fix line issues or equipment failures.
 - Custom pattern or adhoc manual anomaly and machine learning in sensor data using Azure data explorer.
 
