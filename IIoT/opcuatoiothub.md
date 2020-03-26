@@ -1,9 +1,13 @@
 # How Collect data from OPC UA device and Send to IoT Hub
 
+## Authors
+
+Priya Aswani
+Balamurugan Balakreshnan
+
 ## Architecture
 
 ![alt text](https://github.com/balakreshnan/IIoT-AI/blob/master/IIoT/images/opcuasimualation1.jpg "Architecture")
-
 
 ## Use Case
 
@@ -12,10 +16,12 @@ Connect to industrial Devices using OPC UA and subscribe for tags to collect dat
 Business Use case:
 
 - Root Cause Analysis
-- Predective Maintenance
+- Predictive Maintenance
 - Reliability
 - Quality
 - OEE
+- Anomaly Detection
+- Production Troubleshooting
 
 Technical Use case:
 
@@ -24,6 +30,9 @@ Technical Use case:
 - OPC UA based data collection for Industry X.0
 - OPC DA to UA using tuneller or conversion tools.
 - OEE using custom queries in Azure Time Series Insights
+- Anomalies can be detected using trending and patterns using Azure Time Series Insights.
+- Production troubleshooting for technicians to fix line issues or equipment failures.
+- Custom pattern or adhoc manual anomaly and machine learning in sensor data using Azure data explorer.
 
 
 ## Steps
