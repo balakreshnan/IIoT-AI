@@ -2,7 +2,7 @@
 
 ## Authors
 
-Priya Aswani
+Priya Aswani </br>
 Balamurugan Balakreshnan
 
 ## Architecture
