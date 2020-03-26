@@ -172,6 +172,39 @@ Azure data explorer also allows us to expand and create our own dashboards using
 
 Azure Data explorer also has lot of time series functions already in built to Time series analysis like forecasting, Anomaly detection and even machine learning like auto clustering and basket analysis.
 
+To get Azure data explorer start first create the schema to store the data
+
+```
+// Create table command
+////////////////////////////////////////////////////////////
+.create table ['opcdata1']  (['data']:dynamic)
+
+// Create mapping command
+////////////////////////////////////////////////////////////
+.create table ['opcdata1'] ingestion json mapping 'opcdata1_mapping' '[{"column":"data","path":"$","datatype":"dynamic"}]'
+```
+
+Now create a ingestion data store and connect to iot hub and make sure create new consumer group in endpoint as adxinput.
+
+COnfigure the ingestion to use that consumer group and also for table use opcdata1 and for format choose JSON and then for mapping use opcdata1_mapping.
+
+Click Update and wait untill configuration are saved.
+
+![alt text](https://github.com/balakreshnan/IIoT-AI/blob/master/IIoT/images/adx1.jpg "Architecture")
+
+Code to parse the details
+
+```
+opcdata1
+| extend  ingesttime = ingestion_time()
+| extend d=parse_json(data)
+| evaluate bag_unpack(d) 
+```
+
+![alt text](https://github.com/balakreshnan/IIoT-AI/blob/master/IIoT/images/adx2.jpg "Architecture")
+
+
+
 ## Condition Based Monitoring
 
 ![alt text](https://github.com/balakreshnan/IIoT-AI/blob/master/IIoT/images/opcuasimualation2.jpg "Architecture")
