@@ -1,4 +1,4 @@
-# How Collect data from OPC UA device and Send to IoT Hub
+# Indutrial Internet of Thinks (IIoT) Reference Architecture
 
 ## Authors
 
