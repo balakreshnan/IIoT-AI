@@ -179,3 +179,5 @@ Azure Data explorer also has lot of time series functions already in built to Ti
 To Enable Condition based monitoring we can use Stream Analytics. Stream analytics can watch the sensor data and based on condition defined as reference data set in blob storage can be leveraged to make it dynamics and adjustable rules can detect and trigger a rule and send that to Azure function which can further do more processing or send email using tools like SendGrid or other third Party or using custom code as well.
 
 More to come...
+
+Disclaimer: This is not official Microsoft approved industrial IoT Architecture.
