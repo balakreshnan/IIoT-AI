@@ -1,4 +1,4 @@
-# Indutrial Internet of Thinks (IIoT) Reference Architecture
+# Industrial Internet of Thinks (IIoT) Reference Architecture
 
 ## Authors
 
