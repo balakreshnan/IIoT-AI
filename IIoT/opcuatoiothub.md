@@ -1,5 +1,7 @@
 # Industrial Internet of Thinks (IIoT) Reference Architecture
 
+Empowering manufacturer's to achieve more.
+
 ## Authors
 
 Priya Aswani </br>
