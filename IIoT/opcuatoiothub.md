@@ -24,6 +24,7 @@ Business Use case:
 - OEE
 - Anomaly Detection
 - Production Troubleshooting
+- Condition based monitoring is Explained later in the document. Look for condition based monitoring section.
 
 Technical Use case:
 
@@ -146,3 +147,35 @@ Sample output from above samples was
 ```
 
 Now time to move the data in to Azure data explorer to run some root cause and trend analysis.
+
+## Output from Azure Time Series Insights:
+
+Only selecting Sensor tags and adding as series to charts we get this output
+
+![alt text](https://github.com/balakreshnan/IIoT-AI/blob/master/IIoT/images/tsioutputopc1.jpg "Architecture")
+
+![alt text](https://github.com/balakreshnan/IIoT-AI/blob/master/IIoT/images/tsioutputopc2.jpg "Architecture")
+
+The above sample pciture show stepped interpolation and min and max sliced by Boolean value.
+
+Azure Time Series insights has great charting capability to analyze and troubleshoot issue in manufacturing environment.
+
+But to go deep dive analysis in Time Series then we need to use Azure Data Explorer.
+
+## Azure Data Explorer output:
+
+Azure Data explorer allows us to do charting and trending by writing Kusto queries. Doesn't have the click and go environment. 
+
+But Azure data explorer allow us to bring data from other business systems and then combine that seamlessly with time series data for queiring capability. So we can bring order data, Asset management data from Asset management system or ERP's and join them and build queiries.
+
+Azure data explorer also allows us to expand and create our own dashboards using third party tools or custom web sites.
+
+Azure Data explorer also has lot of time series functions already in built to Time series analysis like forecasting, Anomaly detection and even machine learning like auto clustering and basket analysis.
+
+## Condition Based Monitoring
+
+![alt text](https://github.com/balakreshnan/IIoT-AI/blob/master/IIoT/images/opcuasimualation2.jpg "Architecture")
+
+To Enable Condition based monitoring we can use Stream Analytics. Stream analytics can watch the sensor data and based on condition defined as reference data set in blob storage can be leveraged to make it dynamics and adjustable rules can detect and trigger a rule and send that to Azure function which can further do more processing or send email using tools like SendGrid or other third Party or using custom code as well.
+
+More to come...
