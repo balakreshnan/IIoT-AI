@@ -203,6 +203,60 @@ opcdata1
 
 ![alt text](https://github.com/balakreshnan/IIoT-AI/blob/master/IIoT/images/adx2.jpg "Architecture")
 
+Now time to Create a data model to format the sensor data to use if for further analysis.
+
+Create new schema
+
+```
+// Create table command //////////////////////////////////////////////////////////// 
+.create-merge table ['opcDataRaw'] (['data']:dynamic) 
+ 
+.alter-merge table opcDataRaw policy retention softdelete = 0d
+ 
+// Create mapping command //////////////////////////////////////////////////////////// 
+.create-or-alter table ['opcDataRaw'] ingestion json mapping 'opcDataRaw_mapping' '[{"column":"data","path":"$"}]'
+ 
+.create-merge table ['opcDataFlat'] (TimeStamp:datetime, Key:string, Value:string) 
+ 
+.create-or-alter function TransformOPCData()
+{
+opcDataRaw
+| extend Key=tostring(bag_keys(data).[0])
+| extend Value = tostring(['data'].[Key])
+| extend TimeStamp = ingestion_time()
+| project TimeStamp, Key, Value
+}
+
+
+//Create update policy to bind the stabing table, function, and the destination table 
+.alter table opcDataFlat policy update
+@'[{"IsEnabled": true, "Source": "opcDataRaw", "Query": "TransformOPCData()", "IsTransactional": true, "PropagateIngestionProperties": true}]'
+```
+
+Now Change the injestion table to opcDataRaw and mapping to opcDataRaw_mappings and then save.
+
+Now wait and see it the data is flowing.
+
+```
+opcDataFlat
+| limit 2000
+```
+
+![alt text](https://github.com/balakreshnan/IIoT-AI/blob/master/IIoT/images/adx3.jpg "Architecture")
+
+Now lets get one data point to filter for one sensor details
+
+```
+opcDataFlat
+| where Key == "Random.Int1"
+| project TimeStamp, Key, Value
+| render timechart  
+```
+
+![alt text](https://github.com/balakreshnan/IIoT-AI/blob/master/IIoT/images/adx4.jpg "Architecture")
+
+Now time to write kusto query to do other charts using render key word.
+
 ## Condition Based Monitoring
 
 ![alt text](https://github.com/balakreshnan/IIoT-AI/blob/master/IIoT/images/opcuasimualation2.jpg "Architecture")
