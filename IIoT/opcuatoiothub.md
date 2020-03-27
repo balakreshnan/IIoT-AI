@@ -186,7 +186,7 @@ To get Azure data explorer start first create the schema to store the data
 
 Now create a ingestion data store and connect to iot hub and make sure create new consumer group in endpoint as adxinput.
 
-COnfigure the ingestion to use that consumer group and also for table use opcdata1 and for format choose JSON and then for mapping use opcdata1_mapping.
+COnfigure the ingestion to use that consumer group and also for table use opcdata1 and for format choose Multiline JSON and then for mapping use opcdata1_mapping.
 
 Click Update and wait untill configuration are saved.
 
