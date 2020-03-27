@@ -162,6 +162,10 @@ Azure Time Series insights has great charting capability to analyze and troubles
 
 But to go deep dive analysis in Time Series then we need to use Azure Data Explorer.
 
+Opc Output inside in our preview Time series insights. As you can see we can plot sensor data and visualize the trends.
+
+![alt text](https://github.com/balakreshnan/IIoT-AI/blob/master/IIoT/images/timeseries15.jpg "Architecture")
+
 ## Azure Data Explorer output:
 
 Azure Data explorer allows us to do charting and trending by writing Kusto queries. Doesn't have the click and go environment. 
