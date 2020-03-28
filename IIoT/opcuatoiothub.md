@@ -13,6 +13,16 @@ Balamurugan Balakreshnan
 
 ## Use Case
 
+To Enable Digital Transformation and ability to do AI/ML like Predictive Maintenance for manufacturing operations first we need to collect data from sensor to know how it is performing. If we have sensor data we can find patterns or behaviour to do machine learning or deep learning and apply advanced capacbility to solve real problems. Industrial IoT becomes a enabler and also AI is becoming a part of Industrial IoT space for Industry 4.0. 
+
+The below is not a solution for all up manufacturing operations or MOM (manufacturing operation management) but a enabler that makes it possible. But also provide a cloud native platform with scale as needed is the idea behind the reference architecture. 
+
+If manufacturer's can collect data atleast they can manually do analysis by looking at sensor data or charting or trending to see patterns and troubleshoot issues and find better solutions. The below option empowers manufacturer including the plant folks to take data driven decisions and know what's going on in their plants.
+
+This is also one of the solution to above use case built on cloud native platform as a service and also made simple and easy to consume and wasy to operate considering other solutions in the market place. The below solution is also for manufacturer to build or have a partner built it for them. But it is much easier to build than building from scratch.
+
+So to provide a solution for the above use case with currently what is there in the technology space for manufacturing companies the below is one such reference architecture pattern.
+
 Connect to industrial Devices using OPC UA/DA and subscribe for tags to collect data and push to Iot Hub for further processing
 
 Business Use case:
