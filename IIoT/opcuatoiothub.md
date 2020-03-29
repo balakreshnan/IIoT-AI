@@ -271,6 +271,72 @@ opcDataFlat
 
 Now time to write kusto query to do other charts using render key word.
 
+To Store long term data we can do continous export out to blob or ADLS gen2 storage for long term access.
+
+- Create a Storage Account ADLS Gen2
+- Create a container called opcoutput
+- Get the Storage account name, Key and also container name for Azure data explorer configuration
+- Configure the Azure data explorer
+
+in case if you have already create the table here is the drop table command
+
+```
+.drop external table opcExternalLongTerm
+```
+
+Now create the External Table to store for long term
+
+```
+.create external table opcExternalLongTerm (TimeStamp:datetime, Key:string, Value:string) 
+kind=blob
+partition by 
+   "Key="Key,
+   bin(TimeStamp, 1d)
+dataformat=csv
+( 
+   h@'https://iiotstoragebb.blob.core.windows.net/opcoutput;EXQ/qIURZWFWa7ifGnm7CU40eyeNqYYA02ACZ4wIVVLG2llIlj4ZeatCUNfRKVzGjRhd37FaRppWc/s2yoemHQ=='
+)
+```
+
+Now configure the continous export data in Azure Data Explorer
+
+```
+.create-or-alter continuous-export opccontinousexport
+over (opcDataFlat)
+to table opcExternalLongTerm
+with
+(intervalBetweenRuns=1h, 
+ forcedLatency=10m, 
+ sizeLimit=104857600)
+<| opcDataFlat
+```
+
+To See the exports
+
+```
+.show continuous-export opccontinousexport exported-artifacts | where Timestamp > ago(1h)
+```
+
+To find failures please use this command
+
+```
+.show continuous-export opccontinousexport failures
+```
+
+To enable and diable use the below
+
+```
+.enable continuous-export opccontinousexport
+
+.disable continuous-export opccontinousexport
+```
+
+To query the data please use:
+
+```
+external_table("opcExternalLongTerm") | take 100
+```
+
 ## Condition Based Monitoring
 
 ![alt text](https://github.com/balakreshnan/IIoT-AI/blob/master/IIoT/images/opcuasimualation2.jpg "Architecture")
