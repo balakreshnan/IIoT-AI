@@ -44,7 +44,7 @@ Low Code Option 1
 
 - Iot Hub
 - Raw Event - is a consumer group with a copy of the raw data.
-- Azure data explorer - For Root Cause Analysis and Long term Storage with Hot and Cold Storage. Also Machine learning and anomaly detection and basketing options with more 200 or more functions to run adhoc queires and process large data set.
+- Azure data explorer - For Root Cause Analysis and Long term Storage with Hot and Cold Storage. Also Machine learning and anomaly detection and basketing options with more 200 or more functions to run adhoc queries and process large data set.
 - Stream Analytics - Pull Events to detect Anomaly detection
     https://docs.microsoft.com/en-us/azure/stream-analytics/stream-analytics-machine-learning-anomaly-detection
 - Event Hub - To get the alert to send
@@ -57,7 +57,7 @@ Low Code Option 2
 
 - Iot Hub
 - Raw Event - is a consumer group with a copy of the raw data.
-- Azure data explorer - For Root Cause Analysis and Long term Storage with Hot and Cold Storage. Also Machine learning and anomaly detection and basketing options with more 200 or more functions to run adhoc queires and process large data set.
+- Azure data explorer - For Root Cause Analysis and Long term Storage with Hot and Cold Storage. Also Machine learning and anomaly detection and basketing options with more 200 or more functions to run adhoc queries and process large data set.
 - Stream Analytics - Pull Events to detect Anomaly detection
     https://docs.microsoft.com/en-us/azure/stream-analytics/stream-analytics-machine-learning-anomaly-detection
 - Event Hub - To get the alert to send
@@ -70,7 +70,7 @@ Low Code Option 3
 
 - Iot Hub
 - Raw Event - is a consumer group with a copy of the raw data.
-- Azure data explorer - For Root Cause Analysis and Long term Storage with Hot and Cold Storage. Also Machine learning and anomaly detection and basketing options with more 200 or more functions to run adhoc queires and process large data set.
+- Azure data explorer - For Root Cause Analysis and Long term Storage with Hot and Cold Storage. Also Machine learning and anomaly detection and basketing options with more 200 or more functions to run adhoc queries and process large data set.
 - Stream Analytics - Pull Events to detect Anomaly detection
     https://docs.microsoft.com/en-us/azure/stream-analytics/stream-analytics-machine-learning-anomaly-detection
 - Event Hub - To get the alert to send
