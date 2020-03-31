@@ -343,6 +343,62 @@ external_table("opcExternalLongTerm") | take 100
 
 To Enable Condition based monitoring we can use Stream Analytics. Stream analytics can watch the sensor data and based on condition defined as reference data set in blob storage can be leveraged to make it dynamics and adjustable rules can detect and trigger a rule and send that to Azure function which can further do more processing or send email using tools like SendGrid or other third Party or using custom code as well.
 
+From the IoT hub create a consumer group alled sainput and now a copy of IoTHub messages are going to this consumer group.
+
+Create and configure Azure stream analytics.
+
+Set input as iot hub and connect to above consumer group called sainput
+
+Set output as blob storage or another event hub to send alerts
+
+Create a eventhub called anomalyevt and send the below queired data to event hub for further processing.
+
+Write the query as below
+
+```
+WITH AnomalyDetectionStep AS
+(
+    SELECT
+        EVENTENQUEUEDUTCTIME AS time,
+        IoTHub.ConnectionDeviceId AS deviceid,
+        EventProcessedUtcTime AS ProcessedTime,
+        IotHub.EnqueuedTime AS IotHubTime,
+        CAST([Random.Int1] AS float) AS temp,
+        AnomalyDetection_SpikeAndDip(CAST([Random.Int1] AS float), 19, 23, 'spikesanddips')
+            OVER(LIMIT DURATION(second, 120)) AS SpikeAndDipScores
+    FROM inputopc where [Random.Int1] <> 'null'
+)
+SELECT
+    time,
+    temp,
+    deviceid,
+    ProcessedTime,
+    IotHubTime,
+    CAST(GetRecordPropertyValue(SpikeAndDipScores, 'Score') AS float) AS
+    SpikeAndDipScore,
+    CAST(GetRecordPropertyValue(SpikeAndDipScores, 'IsAnomaly') AS bigint) AS
+    IsSpikeAndDipAnomaly
+INTO anomalyputput
+FROM AnomalyDetectionStep
+
+SELECT
+    time,
+    temp,
+    deviceid,
+    ProcessedTime,
+    IotHubTime,
+    CAST(GetRecordPropertyValue(SpikeAndDipScores, 'Score') AS float) AS
+    SpikeAndDipScore,
+    CAST(GetRecordPropertyValue(SpikeAndDipScores, 'IsAnomaly') AS bigint) AS
+    IsSpikeAndDipAnomaly
+INTO outputanomaly
+FROM AnomalyDetectionStep
+```
+
+The above query pulls only one sensor and looks for anamoly and creates a record.
+
+![alt text](https://github.com/balakreshnan/IIoT-AI/blob/master/IIoT/images/logicapp1.jpg "Architecture")
+
 More to come...
 
 Disclaimer: This is not official Microsoft approved industrial IoT Architecture.
