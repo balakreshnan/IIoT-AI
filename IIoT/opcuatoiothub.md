@@ -395,6 +395,49 @@ INTO outputanomaly
 FROM AnomalyDetectionStep
 ```
 
+Kepware OPC data coming iot hub
+
+```
+WITH Telemetry AS (
+SELECT        
+        GetMetadataPropertyValue(inputopc, '[IoTHUB].[ConnectionDeviceId]') as DeviceID,
+        inputopc.EventEnqueuedUtcTime AS EntryTime,
+        arrayElement.ArrayIndex AS AIndex, 
+        arrayElement.ArrayValue AS AValue
+
+FROM inputopc
+CROSS APPLY GetArrayElements(inputopc.[values]) AS arrayElement  
+), 
+ArrayData AS (
+SELECT 
+       DeviceID,
+       EntryTime,
+       AIndex as ArrayIndex,
+       AValue.id as ArrayID,
+       AValue.v as ArrayValue,
+       AValue.t as ArrayTime
+
+FROM Telemetry
+)
+SELECT 
+       *
+INTO outputanomaly
+FROM ArrayData
+```
+
+Or
+
+```
+with cte as
+(
+SELECT s.ArrayValue.* 
+FROM inputopc
+CROSS APPLY GetArrayElements(inputopc.[values]) s
+)
+select *
+into outputanomaly from cte;
+```
+
 The above query pulls only one sensor and looks for anamoly and creates a record.
 
 ![alt text](https://github.com/balakreshnan/IIoT-AI/blob/master/IIoT/images/logicapp1.jpg "Architecture")
