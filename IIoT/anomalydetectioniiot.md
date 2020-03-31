@@ -23,6 +23,7 @@ Components:
     https://docs.microsoft.com/en-us/azure/stream-analytics/stream-analytics-machine-learning-anomaly-detection
 - Event Hub - To get the alert to send
 - Flow to get the event from Azure Event hub and using office 365 email to send emails Alerts.
+    https://docs.microsoft.com/en-us/azure/connectors/connectors-create-api-azure-event-hubs
 
 Low Code No Code Option 2
 
@@ -35,6 +36,7 @@ Low Code No Code Option 2
     https://docs.microsoft.com/en-us/azure/stream-analytics/stream-analytics-machine-learning-anomaly-detection
 - Event Hub - To get the alert to send
 - Logic App to get the event from Azure Event hub and using office 365 email to send emails Alerts.
+    https://docs.microsoft.com/en-us/azure/connectors/connectors-create-api-azure-event-hubs
 
 Low Code Option 1
 
@@ -47,6 +49,7 @@ Low Code Option 1
     https://docs.microsoft.com/en-us/azure/stream-analytics/stream-analytics-machine-learning-anomaly-detection
 - Event Hub - To get the alert to send
 - Flow to get the event from Azure Event hub and using office 365 email to send emails Alerts.
+    https://docs.microsoft.com/en-us/azure/connectors/connectors-create-api-azure-event-hubs
 
 Low Code Option 2
 
@@ -59,6 +62,7 @@ Low Code Option 2
     https://docs.microsoft.com/en-us/azure/stream-analytics/stream-analytics-machine-learning-anomaly-detection
 - Event Hub - To get the alert to send
 - Logic App to get the event from Azure Event hub and using office 365 email to send emails Alerts.
+    https://docs.microsoft.com/en-us/azure/connectors/connectors-create-api-azure-event-hubs
 
 Low Code Option 3
 
@@ -71,5 +75,6 @@ Low Code Option 3
     https://docs.microsoft.com/en-us/azure/stream-analytics/stream-analytics-machine-learning-anomaly-detection
 - Event Hub - To get the alert to send
 - Azure Function to get the event from Azure Event hub and using using third party email like Send Grid to email Alerts.
+    https://docs.microsoft.com/en-us/azure/connectors/connectors-create-api-azure-event-hubs
 
 End
