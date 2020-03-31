@@ -337,7 +337,7 @@ To query the data please use:
 external_table("opcExternalLongTerm") | take 100
 ```
 
-## Condition Based Monitoring
+## Condition Based Monitoring / Anomaly Detection
 
 ![alt text](https://github.com/balakreshnan/IIoT-AI/blob/master/IIoT/images/opcuasimualation2.jpg "Architecture")
 
