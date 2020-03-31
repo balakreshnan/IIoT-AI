@@ -13,6 +13,16 @@ Balamurugan Balakreshnan
 
 ## Use Case
 
+To Enable Digital Transformation and ability to do AI/ML like Predictive Maintenance for manufacturing operations first we need to collect data from sensor to know how it is performing. If we have sensor data we can find patterns or behaviour to do machine learning or deep learning and apply advanced capacbility to solve real problems. Industrial IoT becomes a enabler and also AI is becoming a part of Industrial IoT space for Industry 4.0. 
+
+The below is not a solution for all up manufacturing operations or MOM (manufacturing operation management) but a enabler that makes it possible. But also provide a cloud native platform with scale as needed is the idea behind the reference architecture. 
+
+If manufacturer's can collect data atleast they can manually do analysis by looking at sensor data or charting or trending to see patterns and troubleshoot issues and find better solutions. The below option empowers manufacturer including the plant folks to take data driven decisions and know what's going on in their plants.
+
+This is also one of the solution to above use case built on cloud native platform as a service and also made simple and easy to consume and wasy to operate considering other solutions in the market place. The below solution is also for manufacturer to build or have a partner built it for them. But it is much easier to build than building from scratch.
+
+So to provide a solution for the above use case with currently what is there in the technology space for manufacturing companies the below is one such reference architecture pattern.
+
 Connect to industrial Devices using OPC UA/DA and subscribe for tags to collect data and push to Iot Hub for further processing
 
 Business Use case:
@@ -260,6 +270,72 @@ opcDataFlat
 ![alt text](https://github.com/balakreshnan/IIoT-AI/blob/master/IIoT/images/adx4.jpg "Architecture")
 
 Now time to write kusto query to do other charts using render key word.
+
+To Store long term data we can do continous export out to blob or ADLS gen2 storage for long term access.
+
+- Create a Storage Account ADLS Gen2
+- Create a container called opcoutput
+- Get the Storage account name, Key and also container name for Azure data explorer configuration
+- Configure the Azure data explorer
+
+in case if you have already create the table here is the drop table command
+
+```
+.drop external table opcExternalLongTerm
+```
+
+Now create the External Table to store for long term
+
+```
+.create external table opcExternalLongTerm (TimeStamp:datetime, Key:string, Value:string) 
+kind=blob
+partition by 
+   "Key="Key,
+   bin(TimeStamp, 1d)
+dataformat=csv
+( 
+   h@'https://iiotstoragebb.blob.core.windows.net/opcoutput;EXQ/qIURZWFWa7ifGnm7CU40eyeNqYYA02ACZ4wIVVLG2llIlj4ZeatCUNfRKVzGjRhd37FaRppWc/s2yoemHQ=='
+)
+```
+
+Now configure the continous export data in Azure Data Explorer
+
+```
+.create-or-alter continuous-export opccontinousexport
+over (opcDataFlat)
+to table opcExternalLongTerm
+with
+(intervalBetweenRuns=1h, 
+ forcedLatency=10m, 
+ sizeLimit=104857600)
+<| opcDataFlat
+```
+
+To See the exports
+
+```
+.show continuous-export opccontinousexport exported-artifacts | where Timestamp > ago(1h)
+```
+
+To find failures please use this command
+
+```
+.show continuous-export opccontinousexport failures
+```
+
+To enable and diable use the below
+
+```
+.enable continuous-export opccontinousexport
+
+.disable continuous-export opccontinousexport
+```
+
+To query the data please use:
+
+```
+external_table("opcExternalLongTerm") | take 100
+```
 
 ## Condition Based Monitoring
 
