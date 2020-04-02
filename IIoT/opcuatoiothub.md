@@ -364,7 +364,7 @@ WITH AnomalyDetectionStep AS
         EventProcessedUtcTime AS ProcessedTime,
         IotHub.EnqueuedTime AS IotHubTime,
         CAST([Random.Int1] AS float) AS temp,
-        AnomalyDetection_SpikeAndDip(CAST([Random.Int1] AS float), 19, 23, 'spikesanddips')
+        AnomalyDetection_SpikeAndDip(CAST([Random.Int1] AS float), 95, 120, 'spikesanddips')
             OVER(LIMIT DURATION(second, 120)) AS SpikeAndDipScores
     FROM inputopc where [Random.Int1] <> 'null'
 )
