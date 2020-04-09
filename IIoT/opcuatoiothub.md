@@ -271,6 +271,22 @@ opcDataFlat
 
 Now time to write kusto query to do other charts using render key word.
 
+Trending with 1 minute interval
+
+![alt text](https://github.com/balakreshnan/IIoT-AI/blob/master/IIoT/images/trend1.jpg "Trending")
+
+Trending with 15 minute interval
+
+![alt text](https://github.com/balakreshnan/IIoT-AI/blob/master/IIoT/images/trend2.jpg "Trending")
+
+Trending with 1 hour minute interval
+
+![alt text](https://github.com/balakreshnan/IIoT-AI/blob/master/IIoT/images/trend3.jpg "Trending")
+
+Anomaly Detection
+
+![alt text](https://github.com/balakreshnan/IIoT-AI/blob/master/IIoT/images/anomaly1.jpg "Trending")
+
 To Store long term data we can do continous export out to blob or ADLS gen2 storage for long term access.
 
 - Create a Storage Account ADLS Gen2
