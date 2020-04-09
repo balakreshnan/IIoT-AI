@@ -1,4 +1,4 @@
-# Industrial Internet of Thinks (IIoT) Reference Architecture
+# Industrial Internet of Things (IIoT) Reference Architecture
 
 Empowering manufacturer's to achieve more.
 
