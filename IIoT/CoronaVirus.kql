@@ -1,0 +1,133 @@
+﻿CoronaVirus
+| summarize sum(Confirmed), sum(Deaths), sum(Recovered) by CountryOrRegion
+| order by sum_Confirmed desc, sum_Deaths desc, sum_Recovered desc
+
+CoronaVirus
+| project Timestamp, CountryOrRegion, Confirmed,Deaths,Recovered
+| where CountryOrRegion == "Italy"
+| order by Timestamp asc
+| render linechart 
+
+CoronaVirus
+| project Timestamp, CountryOrRegion, Confirmed, Deaths, Recovered
+| order by Timestamp asc, CountryOrRegion desc
+| render linechart  
+
+CoronaVirus
+| project Timestamp, CountryOrRegion, Confirmed, Deaths, Recovered
+| order by Timestamp asc
+| render linechart
+
+CoronaVirus
+| project Timestamp, Confirmed, Deaths, Recovered
+| order by Timestamp asc
+| render barchart 
+
+CoronaVirus
+| project Timestamp, Confirmed, Deaths, Recovered
+| where Timestamp >= datetime(02/28/2020)
+| order by Timestamp asc
+| render linechart  
+
+CoronaVirus
+| where Timestamp >= datetime(02/28/2020)
+| order by Timestamp asc, Confirmed desc , Deaths desc , Recovered desc 
+
+
+CoronaVirus
+| project Timestamp,CountryOrRegion,Confirmed,Deaths,Recovered
+| summarize total=count(), confirmed=sum(Confirmed), deaths=sum(Deaths) , recovered=sum(Recovered) by 
+year=datetime_part("Year",Timestamp)
+,month=datetime_part("Month",Timestamp),day=datetime_part("Day",Timestamp)
+
+CoronaVirus
+| project Timestamp,CountryOrRegion,Confirmed,Deaths,Recovered
+| summarize total=count(), confirmed=sum(Confirmed), deaths=sum(Deaths) , recovered=sum(Recovered) by 
+year=datetime_part("Year",Timestamp)
+,month=datetime_part("Month",Timestamp),day=datetime_part("Day",Timestamp)
+| render table    
+
+CoronaVirus
+| project Timestamp,CountryOrRegion,Confirmed,Deaths,Recovered
+| summarize total=count(), confirmed=sum(Confirmed), deaths=sum(Deaths) , recovered=sum(Recovered) by 
+year=datetime_part("Year",Timestamp)
+,month=datetime_part("Month",Timestamp),day=datetime_part("Day",Timestamp), CountryOrRegion
+| render table 
+
+CoronaVirus
+| project Timestamp,CountryOrRegion, ProvinceOrState,Confirmed,Deaths,Recovered
+| summarize total=count(), confirmed=sum(Confirmed), deaths=sum(Deaths) , recovered=sum(Recovered) by 
+year=datetime_part("Year",Timestamp)
+,month=datetime_part("Month",Timestamp),day=datetime_part("Day",Timestamp), CountryOrRegion, ProvinceOrState
+| render table   
+
+CoronaVirus
+| project Timestamp,CountryOrRegion, ProvinceOrState,Confirmed,Deaths,Recovered
+| summarize total=count(), confirmed=sum(Confirmed), deaths=sum(Deaths) , recovered=sum(Recovered) by 
+year=datetime_part("Year",Timestamp)
+,month=datetime_part("Month",Timestamp),day=datetime_part("Day",Timestamp), CountryOrRegion, ProvinceOrState, Timestamp
+| where CountryOrRegion == "US"
+| order by year, month, day, ProvinceOrState
+| render table 
+
+
+CoronaVirus
+| project Timestamp,CountryOrRegion, ProvinceOrState,Confirmed,Deaths,Recovered
+| summarize total=count(), confirmed=sum(Confirmed), deaths=sum(Deaths) , recovered=sum(Recovered) by 
+year=datetime_part("Year",Timestamp)
+,month=datetime_part("Month",Timestamp),day=datetime_part("Day",Timestamp), CountryOrRegion, ProvinceOrState, Timestamp
+| where CountryOrRegion == "US"
+| order by year, month, day, ProvinceOrState
+| render linechart  with  (ycolumns = confirmed, deaths, recovered, series = Timestamp)
+
+CoronaVirus
+| project Timestamp,CountryOrRegion, ProvinceOrState,Confirmed,Deaths,Recovered
+| summarize total=count(), confirmed=sum(Confirmed), deaths=sum(Deaths) , recovered=sum(Recovered) by 
+year=datetime_part("Year",Timestamp)
+,month=datetime_part("Month",Timestamp),day=datetime_part("Day",Timestamp), CountryOrRegion, ProvinceOrState, Timestamp
+| where CountryOrRegion == "US"
+| order by year, month, day, ProvinceOrState
+| render linechart  with  (ycolumns = confirmed, deaths, recovered, series = CountryOrRegion, ProvinceOrState)
+
+CoronaVirus
+| project Timestamp,CountryOrRegion, ProvinceOrState,Confirmed,Deaths,Recovered
+| summarize total=count(), confirmed=sum(Confirmed), deaths=sum(Deaths) , recovered=sum(Recovered) by 
+year=datetime_part("Year",Timestamp)
+,month=datetime_part("Month",Timestamp),day=datetime_part("Day",Timestamp), CountryOrRegion, ProvinceOrState, Timestamp
+| where CountryOrRegion == "US"
+| order by year, month, day, ProvinceOrState
+| render columnchart
+
+CoronaVirus
+| project Timestamp,CountryOrRegion, ProvinceOrState,Confirmed,Deaths,Recovered
+| summarize total=count(), confirmed=sum(Confirmed), deaths=sum(Deaths) , recovered=sum(Recovered) by 
+year=datetime_part("Year",Timestamp)
+,month=datetime_part("Month",Timestamp),day=datetime_part("Day",Timestamp), CountryOrRegion, ProvinceOrState, Timestamp
+| where CountryOrRegion == "US"
+| order by year, month, day, ProvinceOrState
+| render table
+| extend rn=row_number()
+
+CoronaVirus
+| project Timestamp,CountryOrRegion, ProvinceOrState,Confirmed,Deaths,Recovered
+| summarize total=count(), confirmed=sum(Confirmed), deaths=sum(Deaths) , recovered=sum(Recovered) by 
+year=datetime_part("Year",Timestamp)
+,month=datetime_part("Month",Timestamp),day=datetime_part("Day",Timestamp), CountryOrRegion, ProvinceOrState, Timestamp
+| where CountryOrRegion == "US"
+| order by year, month, day, ProvinceOrState
+| render table
+| extend rn=row_number(), prevA = prev(confirmed,1), diff = (confirmed - prev(confirmed,1))
+
+CoronaVirus
+| project Timestamp,CountryOrRegion, ProvinceOrState,Confirmed,Deaths,Recovered
+| summarize total=count(), confirmed=sum(Confirmed), deaths=sum(Deaths) , recovered=sum(Recovered) by 
+year=datetime_part("Year",Timestamp)
+,month=datetime_part("Month",Timestamp),day=datetime_part("Day",Timestamp), CountryOrRegion, ProvinceOrState, Timestamp
+| where CountryOrRegion == "US"
+| order by year, month, day, ProvinceOrState
+| render table
+| extend rn=row_number(), prevA = prev(confirmed,1), 
+diff = (confirmed - prev(confirmed,1)), diffdeaths = (deaths - prev(deaths,1)), diffrecovered = (recovered - prev(recovered,1))
+
+CovidCountries
+| limit 2000

@@ -294,7 +294,7 @@ partition by
    bin(TimeStamp, 1d)
 dataformat=csv
 ( 
-   h@'https://iiotstoragebb.blob.core.windows.net/opcoutput;EXQ/qIURZWFWa7ifGnm7CU40eyeNqYYA02ACZ4wIVVLG2llIlj4ZeatCUNfRKVzGjRhd37FaRppWc/s2yoemHQ=='
+   h@'https://xxxxxx.blob.core.windows.net/opcoutput;xxxxxxxxxxxxxxxxxxxxxxxxx'
 )
 ```
 
