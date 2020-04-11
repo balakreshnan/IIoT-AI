@@ -9,7 +9,7 @@
 - Intelligent Edge - Edge Data collection and data management
 - IoT Hub - Gateway to Cloud with Security
 - Processing Path 
-  - Anomaly and Rules Path
+  - Anomaly and Rules Path - Condition based monitoring or alerting.
   - Cloud Historian Path - For OEE/Remote Monitoring/Predictive Maintenance/Dashboard/Operations
   - Advanced Analytics Path - For Business reporting across multiple locations/plants/factories/across countries
   - Machine learning Path - for Predictive maintenance/Forecasting and other ML use cases
