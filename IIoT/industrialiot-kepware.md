@@ -9,17 +9,17 @@
 - Intelligent Edge - Edge Data collection and data management
 - IoT Hub - Gateway to Cloud with Security
 - Processing Path 
- - Anomaly and Rules Path
- - Cloud Historian Path - For OEE/Remote Monitoring/Predictive Maintenance/Dashboard/Operations
- - Advanced Analytics Path - For Business reporting across multiple locations/plants/factories/across countries
- - Machine learning Path - for Predictive maintenance/Forecasting and other ML use cases
- - Integrate with Business Apps Path - to send and recevive data between business systems
+  - Anomaly and Rules Path
+  - Cloud Historian Path - For OEE/Remote Monitoring/Predictive Maintenance/Dashboard/Operations
+  - Advanced Analytics Path - For Business reporting across multiple locations/plants/factories/across countries
+  - Machine learning Path - for Predictive maintenance/Forecasting and other ML use cases
+  - Integrate with Business Apps Path - to send and recevive data between business systems
 - Common Services
- - DevOps - Github for code repo where available and CI/CD where available
- - Azure AD - for authentication
- - Key Vault - Storing secrets
- - Monitor using Azure Monitor and Application Insights
- - Security using Sentinel
+  - DevOps - Github for code repo where available and CI/CD where available
+  - Azure AD - for authentication
+  - Key Vault - Storing secrets
+  - Monitor using Azure Monitor and Application Insights
+  - Security using Sentinel
 - BackUp
 - DR
 - Scale
