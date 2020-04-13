@@ -1,0 +1,94 @@
+[
+    {
+      "timestamp": 1586780606000,
+      "values": [
+        {
+          "id": "Channel1.Device1.Tag1",
+          "v": 250,
+          "q": true,
+          "t": 1586780606000
+        },
+        {
+          "id": "Channel1.Device1.Tag2",
+          "v": 220,
+          "q": true,
+          "t": 1586780606001
+        },
+        {
+          "id": "Channel1.Device1.Tag3",
+          "v": 150,
+          "q": true,
+          "t": 1586780606002
+        }
+      ]
+    },
+    {
+      "timestamp": 1586780606030,
+      "values": [
+        {
+          "id": "Channel1.Device1.Tag1",
+          "v": 255,
+          "q": true,
+          "t": 1586780606031
+        },
+        {
+          "id": "Channel1.Device1.Tag2",
+          "v": 223,
+          "q": true,
+          "t": 1586780606032
+        },
+        {
+          "id": "Channel1.Device1.Tag3",
+          "v": 156,
+          "q": true,
+          "t": 1586780606033
+        }
+      ]
+    },
+    {
+      "timestamp": 1586780606040,
+      "values": [
+        {
+          "id": "Channel1.Device1.Tag1",
+          "v": 251,
+          "q": true,
+          "t": 1586780606041
+        },
+        {
+          "id": "Channel1.Device1.Tag2",
+          "v": 229,
+          "q": true,
+          "t": 1586780606041
+        },
+        {
+          "id": "Channel1.Device1.Tag3",
+          "v": 153,
+          "q": true,
+          "t": 1586780606042
+        }
+      ]
+    },
+    {
+      "timestamp": 1586780606060,
+      "values": [
+        {
+          "id": "Channel1.Device1.Tag1",
+          "v": 252,
+          "q": true,
+          "t": 1586780606061
+        },
+        {
+          "id": "Channel1.Device1.Tag2",
+          "v": 224,
+          "q": true,
+          "t": 1586780606062
+        },
+        {
+          "id": "Channel1.Device1.Tag3",
+          "v": 158,
+          "q": true,
+          "t": 1586780606063
+        }
+      ]
+    }
+  ]

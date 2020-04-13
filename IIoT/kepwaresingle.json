@@ -1,0 +1,8 @@
+{
+    "timestamp":1586780606060, 
+    "values": [ 
+        {"id":"Channel1.Device1.Tag1","v":252,"q":true,"t":1586780606061},
+        {"id":"Channel1.Device1.Tag2","v":224,"q":true,"t":1586780606062},
+        {"id":"Channel1.Device1.Tag3","v":158,"q":true,"t":1586780606063}
+    ]
+}
