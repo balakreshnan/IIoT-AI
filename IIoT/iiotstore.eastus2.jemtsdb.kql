@@ -509,3 +509,580 @@ opcDataFlat
 
 opcDataFlat
 | count
+
+// Create table command
+////////////////////////////////////////////////////////////
+.create table ['iotcentraltelemetry']  (['humidity']:real, ['temperature']:real, ['pressure']:real, ['magnetometer_x']:int, ['magnetometer_y']:int, ['magnetometer_z']:int, ['gyroscope_x']:int, ['gyroscope_y']:int, ['gyroscope_z']:int, ['accelerometer_x']:int, ['accelerometer_y']:int, ['accelerometer_z']:int, ['EventProcessedUtcTime']:datetime, ['PartitionId']:int, ['EventEnqueuedUtcTime']:datetime, ['enqueuedTime']:datetime, ['EnqueuedTimeUtc']:datetime)
+
+// Create mapping command
+////////////////////////////////////////////////////////////
+.create table ['iotcentraltelemetry'] ingestion json mapping 'iotcentraltelemetry_mapping' '[{"column":"humidity","path":"$.humidity","datatype":"real"},{"column":"temperature","path":"$.temperature","datatype":"real"},{"column":"pressure","path":"$.pressure","datatype":"real"},{"column":"magnetometer_x","path":"$.magnetometer.x","datatype":"int"},{"column":"magnetometer_y","path":"$.magnetometer.y","datatype":"int"},{"column":"magnetometer_z","path":"$.magnetometer.z","datatype":"int"},{"column":"gyroscope_x","path":"$.gyroscope.x","datatype":"int"},{"column":"gyroscope_y","path":"$.gyroscope.y","datatype":"int"},{"column":"gyroscope_z","path":"$.gyroscope.z","datatype":"int"},{"column":"accelerometer_x","path":"$.accelerometer.x","datatype":"int"},{"column":"accelerometer_y","path":"$.accelerometer.y","datatype":"int"},{"column":"accelerometer_z","path":"$.accelerometer.z","datatype":"int"},{"column":"EventProcessedUtcTime","path":"$.EventProcessedUtcTime","datatype":"datetime"},{"column":"PartitionId","path":"$.PartitionId","datatype":"int"},{"column":"EventEnqueuedUtcTime","path":"$.EventEnqueuedUtcTime","datatype":"datetime"},{"column":"enqueuedTime","path":"$.enqueuedTime","datatype":"datetime"},{"column":"EnqueuedTimeUtc","path":"$.EnqueuedTimeUtc","datatype":"datetime"}]'
+
+
+iotcentraltelemetry
+| count  
+
+iotcentraltelemetry
+| limit 200 | extend ingestionTime = ingestion_time()
+| order by ingestionTime desc 
+
+iotcentraltelemetry
+| extend ingestionTime = ingestion_time()
+
+iotcentraltelemetry
+| extend ingestionTime = ingestion_time()
+| order by ingestionTime
+
+
+iotcentraltelemetry 
+| extend ingestionTime = ingestion_time()
+| project humidity, temperature, pressure, magnetometer_x, magnetometer_y,
+magnetometer_z, gyroscope_x, gyroscope_y, gyroscope_z, 
+accelerometer_x, accelerometer_y,accelerometer_z, ingestionTime
+| render linechart  with  (ycolumns = humidity, pressure, magnetometer_x, magnetometer_y,
+magnetometer_z, gyroscope_x, gyroscope_y, gyroscope_z, 
+accelerometer_x, accelerometer_y,accelerometer_z, series = ingestionTime)
+
+
+iotcentraltelemetry
+| extend ingestionTime = ingestion_time()
+| summarize avgHumidity=avg(humidity), avgTemperature=avg(temperature) ,
+avgPressure=avg(pressure) , avgaccx=avg(accelerometer_x) ,
+avgaccy=avg(accelerometer_y) ,avgaccz=avg(accelerometer_z)  
+by bin(ingestionTime, 15m) 
+| render timechart
+
+
+iotcentraltelemetry
+| extend ingestionTime = ingestion_time()
+| summarize avgHumidity=avg(humidity), avgTemperature=avg(temperature) ,
+avgPressure=avg(pressure)   
+by bin(ingestionTime, 1m) 
+| render timechart
+
+iotcentraltelemetry
+| extend ingestionTime = ingestion_time()
+| summarize avgHumidity=avg(humidity), avgTemperature=avg(temperature)
+by bin(ingestionTime, 1m) 
+| render timechart
+
+
+iotcentraltelemetry
+| extend ingestionTime = ingestion_time()
+| summarize avgHumidity=avg(humidity), avgTemperature=avg(temperature) ,
+avgPressure=avg(pressure/100)   
+by bin(ingestionTime, 1m) 
+| render timechart
+
+
+.alter table iotcentraltelemetry (inserttime:datetime) 
+
+
+iotcentraltelemetry
+| extend ingesttime = ingestion_time()
+| project ingesttime,humidity,temperature,pressure, accelerometer_x,accelerometer_y,accelerometer_z
+| summarize avgHumidity=avg(humidity) ,avgPressure=avg(pressure), avgTemperature=avg(temperature)
+by bin(ingesttime, 1m)
+| render timechart 
+
+iotcentraltelemetry
+| extend ingesttime = ingestion_time()
+| project ingesttime,humidity,temperature,pressure, accelerometer_x,accelerometer_y,accelerometer_z
+| summarize avgHumidity=avg(humidity) ,avgTemperature=avg(temperature)
+by bin(ingesttime, 1m)
+| render timechart 
+
+iotcentraltelemetry
+| extend ingesttime = ingestion_time()
+| project ingesttime,humidity,temperature,pressure, accelerometer_x,accelerometer_y,accelerometer_z
+| summarize avgHumidity=avg(humidity) ,avgTemperature=avg(temperature)
+by bin(ingesttime, 15m)
+| render timechart 
+
+iotcentraltelemetry
+| extend ingesttime = ingestion_time()
+| project ingesttime,humidity,temperature,pressure, accelerometer_x,accelerometer_y,accelerometer_z
+| summarize avgHumidity=avg(humidity) ,avgTemperature=avg(temperature)
+by bin(ingesttime, 1h)
+| render timechart 
+
+iotcentraltelemetry
+| extend ingesttime = ingestion_time()
+| project ingesttime,humidity,temperature,pressure, accelerometer_x,accelerometer_y,accelerometer_z
+| summarize avgHumidity=avg(humidity) ,avgTemperature=avg(temperature),avgPressure=avg(pressure/100)
+by bin(ingesttime, 1m)
+| render timechart 
+
+iotcentraltelemetry
+| extend ingesttime = ingestion_time()
+| project ingesttime,humidity,temperature,pressure, accelerometer_x,accelerometer_y,accelerometer_z
+| summarize avgHumidity=avg(humidity) ,avgTemperature=avg(temperature),avgPressure=avg(pressure/100)
+by bin(ingesttime, 15m)
+| render timechart 
+
+iotcentraltelemetry
+| extend ingesttime = ingestion_time()
+| project ingesttime,humidity,temperature,pressure, accelerometer_x,accelerometer_y,accelerometer_z
+| summarize avgHumidity=avg(humidity) ,avgTemperature=avg(temperature),avgPressure=avg(pressure/100)
+by bin(ingesttime, 1h)
+| render timechart 
+
+iotcentraltelemetry
+| extend ingesttime = ingestion_time()
+| project ingesttime,humidity,temperature,pressure, accelerometer_x,accelerometer_y,accelerometer_z
+| summarize avgHumidity=avg(humidity) ,avgTemperature=avg(temperature),avgPressure=avg(pressure/100)
+by bin(ingesttime, 1d)
+| render timechart 
+
+let min_t = datetime(2020-03-18);
+let max_t = datetime(2020-03-19 22:00);
+let dt = 1h;
+iotcentraltelemetry
+| extend ingesttime = ingestion_time() 
+| make-series temperature=avg(temperature) on ingesttime from min_t to max_t step dt
+| extend (anomalies, score, baseline) = series_decompose_anomalies(temperature, 1.5, -1, 'linefit')
+| render anomalychart with(anomalycolumns=anomalies, title='Temp, anomalies') 
+
+let min_t = datetime(2020-03-18);
+let max_t = datetime(2020-03-19 22:00);
+let dt = 1h;
+let horizon=7d;
+iotcentraltelemetry
+| extend ingesttime = ingestion_time() 
+| make-series temperature=avg(temperature) on ingesttime from min_t to max_t step dt
+| extend forecast = series_decompose_forecast(temperature, toint(horizon/dt))
+| render timechart with(title='Temp, forecasting the next week by Time Series Decomposition')
+
+let min_t = toscalar(iotcentraltelemetry | extend ingesttime = ingestion_time()  | summarize min(ingesttime));  
+let max_t = toscalar(iotcentraltelemetry  | extend ingesttime = ingestion_time() | summarize max(ingesttime));  
+iotcentraltelemetry
+| extend ingesttime = ingestion_time() 
+| make-series num=count() on ingesttime from min_t to max_t step 10m
+| render timechart with(title="Temperature over a week, 10 minutes resolution")
+
+let min_t=datetime(2020-03-18);
+iotcentraltelemetry
+| extend ingesttime = ingestion_time() 
+| make-series num=count() on ingesttime from min_t to min_t+24h step 1m
+| render timechart with(title="Zoom on the 2nd spike, 1 minute resolution")
+
+
+let min_peak_t=datetime(2020-03-18);
+let max_peak_t=datetime(2020-03-19 22:00);
+iotcentraltelemetry
+| extend ingesttime = ingestion_time() 
+| where ingesttime between(min_peak_t..max_peak_t)
+| evaluate autocluster()
+
+let min_peak_t=datetime(2020-03-18);
+let max_peak_t=datetime(2020-04-08 22:00);
+iotcentraltelemetry
+| extend ingesttime = ingestion_time() 
+| where ingesttime between(min_peak_t..max_peak_t)
+| evaluate basket()
+
+.drop table opcdata
+
+// Create table command
+////////////////////////////////////////////////////////////
+.create table ['opcdata']  (['Random_Int1']:int, ['Random_Boolean']:bool)
+
+
+// Create mapping command
+////////////////////////////////////////////////////////////
+.create table ['opcdata'] ingestion json mapping 'opcdata_mapping' '[{"column":"Random_Int1","path":"$.Random.Int1","datatype":"int"},{"column":"Random_Boolean","path":"$.Random.Boolean","datatype":"bool"}]'
+
+// Create table command
+////////////////////////////////////////////////////////////
+.create table ['opcdata']  (['Random_Int1']:string, ['Random_Boolean']:string)
+
+
+// Create mapping command
+////////////////////////////////////////////////////////////
+.create table ['opcdata'] ingestion json mapping 'opcdata_mapping' '[{"column":"Random_Int1","path":"$.Random.Int1","datatype":"string"},{"column":"Random_Boolean","path":"$.Random.Boolean","datatype":"string"}]'
+
+
+// Ingest data into table command
+///////////////////////////////////////////////////////////
+.ingest into table ['opcdata'] ('https://ccpkstrldiiotstore00.blob.core.windows.net/986-20200325-temp-e5c334ee145d4b43a3a2d3a96fbac1df/1585168653619_opssample.json?sv=2018-03-28&sr=c&sig=HQKG25536GUWiHAooMLKBQGUHevJIYHK1qmV%2BGW7CF8%3D&st=2020-03-25T19%3A37%3A33Z&se=2020-03-29T20%3A37%3A33Z&sp=rwdl') with (format='multijson',ingestionMappingReference='opcdata_mapping',ingestionMappingType='Json',tags="['27e96ef0-8284-4044-9ae0-4393e8bf1ed4']")
+
+
+
+
+opcdata
+| project Random_Int1, Random_Boolean
+| extend ingesttime = ingestion_time() 
+| limit 2000
+
+opcdata
+| count
+
+opcdata
+| extend  ingesttime = ingestion_time()
+| project parse_json(Random_Int1.)
+
+
+.drop table opcdata1
+
+.create table ['opcdata1']  (['tagname']:string, ['tagvalue']:string)
+
+
+// Create mapping command
+////////////////////////////////////////////////////////////
+.create table ['opcdata1'] ingestion json mapping 'opcdata_mapping1' '[{"column":"tagname","path":"$.tagname","datatype":"string"},{"column":"tagvalue","path":"$.tagvalue","datatype":"string"}]'
+
+
+
+opcdata1
+| count 
+
+opcdata1
+| limit 2000
+
+
+// Create table command
+////////////////////////////////////////////////////////////
+.create table ['opcdata1']  (['data']:dynamic)
+
+// Create mapping command
+////////////////////////////////////////////////////////////
+.create table ['opcdata1'] ingestion json mapping 'opcdata1_mapping' '[{"column":"data","path":"$","datatype":"dynamic"}]'
+
+// Ingest data into table command
+///////////////////////////////////////////////////////////
+.ingest into table ['opcdata1'] ('https://ccpkstrldiiotstore00.blob.core.windows.net/ch6-20200326-temp-e5c334ee145d4b43a3a2d3a96fbac1df/1585236903317_opssample1.json?sv=2018-03-28&sr=c&sig=lfjfddGdEXG7ro1Vcr3KRwPtUWC1qkgcujMmtUOsPxA%3D&st=2020-03-26T14%3A35%3A03Z&se=2020-03-30T15%3A35%3A03Z&sp=rwdl') with (format='multijson',ingestionMappingReference='opcdata1_mapping',ingestionMappingType='Json',tags="['ed6f1b19-ece6-4a2c-9872-c513fe7f0d73']")
+
+
+opcdata1
+| extend  ingesttime = ingestion_time()
+| project parse_json(data)
+
+
+
+opcdata1
+| extend  ingesttime = ingestion_time()
+| project bag_keys(data)
+
+opcdata1
+| extend  ingesttime = ingestion_time()
+| extend d=parse_json(data)
+| extend TagName=d["Random.Int1"] 
+
+opcdata1
+| extend  ingesttime = ingestion_time()
+| extend d=parse_json(data)
+//|extend TagName=d["Random.Int1"]
+//| summarize bag=make_bag(d)
+| evaluate bag_unpack(d) 
+| project data, ingesttime
+
+
+opcdata1
+| extend  ingesttime = ingestion_time()
+| extend d=parse_json(data)
+| extend TagName=d["Random.Boolean"] 
+
+opcdata1
+| extend  ingesttime = ingestion_time()
+| extend d=parse_json(data)
+//|extend TagName=d["Random.Int1"]
+//| summarize bag=make_bag(d)
+| evaluate bag_unpack(d) 
+| render timechart  with  (ycolumns = data, series = ingesttime)
+
+opcdata1
+| extend  ingesttime = ingestion_time()
+| extend d=parse_json(data)
+//| summarize bag=make_bag(d) by bin(ingesttime, 1s)
+| evaluate bag_unpack(d) 
+//| project ingesttime
+
+opcdata1
+| count
+
+opcdata1
+| mv-apply ['data']
+
+// Create table command //////////////////////////////////////////////////////////// 
+.create-merge table ['opcDataRaw'] (['data']:dynamic) 
+ 
+.alter-merge table opcDataRaw policy retention softdelete = 0d
+ 
+// Create mapping command //////////////////////////////////////////////////////////// 
+.create-or-alter table ['opcDataRaw'] ingestion json mapping 'opcDataRaw_mapping' '[{"column":"data","path":"$"}]'
+ 
+.create-merge table ['opcDataFlat'] (TimeStamp:datetime, Key:string, Value:string) 
+ 
+.create-or-alter function TransformOPCData()
+{
+opcDataRaw
+| extend Key=tostring(bag_keys(data).[0])
+| extend Value = tostring(['data'].[Key])
+| extend TimeStamp = ingestion_time()
+| project TimeStamp, Key, Value
+}
+
+
+//Create update policy to bind the stabing table, function, and the destination table 
+.alter table opcDataFlat policy update
+@'[{"IsEnabled": true, "Source": "opcDataRaw", "Query": "TransformOPCData()", "IsTransactional": true, "PropagateIngestionProperties": true}]'
+
+opcDataFlat
+| limit 3000
+
+opcDataFlat
+| count
+
+opcDataFlat
+| limit 2000
+
+opcDataFlat
+| where Key == "Random.Int1"
+| project TimeStamp, Key, Value
+| render timechart with (ycolumns=Value, xcolumn=TimeStamp)
+
+opcDataFlat
+| limit 500000
+
+opcDataFlat
+| count
+
+opcDataFlat
+| where Key == "Random.Int1"
+| limit 500000
+
+opcDataFlat
+| project TimeStamp, Value
+| render linechart with  (ycolumns = Value, xcolumn= TimeStamp)
+
+opcDataFlat
+| project TimeStamp, Value
+| extend  ingesttime=ingestion_time()
+| render linechart    
+
+opcDataFlat
+| extend ingesttime = ingestion_time()
+| project TimeStamp, Key,Value
+| where Key == "Random.Int1"
+| summarize avgValue=max(Value) 
+by bin(TimeStamp, 2s)
+| render timechart with (ycolumns= avgValue, xcolumn=TimeStamp)
+
+opcDataFlat
+| where Key == "Random.Int1"
+| limit 500000
+| render linechart 
+
+opcDataFlat
+| where Key == "Random.Int1"
+| summarize TimeStamp=max(TimeStamp), Key = max(Key), avgValue=min(Value) by bin(TimeStamp, 2s)
+| project TimeStamp, Key, avgValue
+| render timechart with( ycolumns=avgValue,Key, xcolumn=TimeStamp)
+
+anomalydata
+| limit 1000
+
+opcDataFlat
+| extend ingesttime = ingestion_time()
+| project TimeStamp, Key,Value
+| where Key == "Random.Int1"
+| summarize avgValue=max(Value) 
+by bin(TimeStamp, 2s)
+
+
+let min_t = datetime(2020-03-27);
+let max_t = datetime(2020-04-01 22:00);
+let dt = 1h;
+opcDataFlat
+| extend ingesttime = ingestion_time() 
+| where Key == "Random.Int1"
+| make-series temperature=avg(todouble(Value)) on ingesttime from min_t to max_t step dt
+| extend (anomalies, score, baseline) = series_decompose_anomalies(temperature, 1.5, -1, 'linefit')
+| render anomalychart with(anomalycolumns=anomalies, title='Temp, anomalies') 
+
+
+let min_t = datetime(2020-03-27);
+let max_t = datetime(2020-04-07 22:00);
+let dt = 1h;
+let horizon=7d;
+opcDataFlat
+| extend ingesttime = ingestion_time() 
+| make-series temperature=avg(todouble(Value)) on ingesttime from min_t to max_t step dt
+| extend forecast = series_decompose_forecast(temperature, toint(horizon/dt))
+| render timechart with(title='Temp, forecasting the next week by Time Series Decomposition')
+
+let min_t = toscalar(opcDataFlat | summarize min(TimeStamp));
+let max_t = toscalar(opcDataFlat | summarize max(TimeStamp));
+opcDataFlat
+| make-series num=count() default=0 on TimeStamp in range(min_t, max_t, 1h) by todouble(Value)
+| extend ma_num=series_fir(num, repeat(1, 5), true, true)
+| render timechart
+
+opcDataFlat
+| extend series_fit_2lines(todynamic(Value)), series_fit_line(todynamic(Value))
+| render linechart with(xcolumn=TimeStamp)
+
+let min_t = toscalar(opcDataFlat | summarize min(TimeStamp));
+let max_t = toscalar(opcDataFlat | summarize max(TimeStamp));
+opcDataFlat
+| where Key == "Random.Int1"
+| make-series num=count() default=0 on TimeStamp in range(min_t, max_t, 1h) by todouble(Value)
+| extend ma_num=series_fir(num, repeat(1, 5), true, true)
+| extend residual_num=series_subtract(num, ma_num) //to calculate residual time series
+// filter on Win 10 to visualize a cleaner chart 
+| render timechart
+
+let min_t = toscalar(opcDataFlat | summarize min(TimeStamp));  
+let max_t = toscalar(opcDataFlat | summarize max(TimeStamp));  
+opcDataFlat
+| make-series reads=avg(todouble(Value)) on TimeStamp in range(min_t, max_t, 1h)
+| render timechart with(ymin=0)
+
+let min_t = toscalar(opcDataFlat | summarize min(TimeStamp));  
+let max_t = toscalar(opcDataFlat | summarize max(TimeStamp));  
+opcDataFlat
+| make-series reads=avg(todouble(Value)) on TimeStamp in range(min_t, max_t, 1h) by todouble(Value)
+| extend (rsquare, slope) = series_fit_line(reads)
+| top 2 by slope asc 
+| render timechart with(title='Service Traffic Outage for 2 instances (out of 18339)')
+
+let min_t = datetime(2020-03-27);
+let max_t = datetime(2020-04-01 22:00);
+let dt = 1h;
+opcDataFlat
+| make-series num=avg(todouble(Value)) on TimeStamp from min_t to max_t step dt by Key 
+| where Key == 'Random.Int1'   //  select a single time series for a cleaner visualization
+| extend (baseline, seasonal, trend, residual) = series_decompose(num, -1, 'linefit')  //  decomposition of a set of time series to seasonal, trend, residual, and baseline (seasonal+trend)
+| render timechart with(title='Web app. traffic of a month, decomposition', ysplit=panels)
+
+let min_t = datetime(2020-03-27);
+let max_t = datetime(2020-04-01 22:00);
+let dt = 1h;
+opcDataFlat
+| make-series num=avg(todouble(Value)) on TimeStamp from min_t to max_t step dt by Key 
+| where Key == 'Random.Int1'   //  select a single time series for a cleaner visualization
+| extend (anomalies, score, baseline) = series_decompose_anomalies(num, 1.5, -1, 'linefit')
+| render anomalychart with(anomalycolumns=anomalies, title='Web app. traffic of a month, anomalies') //use "| render anomalychart with anomalycolumns=anomalies" to render the anomalies as bold points on the series charts.
+
+let min_t = datetime(2020-03-27);
+let max_t = datetime(2020-04-01 22:00);
+let dt = 2h;
+let horizon=7d;
+opcDataFlat
+| make-series num=avg(todouble(Value)) on TimeStamp from min_t to max_t+horizon step dt by Key 
+| where Key == 'Random.Int1'   //  select a single time series for a cleaner visualization
+| extend forecast = series_decompose_forecast(num, toint(horizon/dt))
+| render timechart with(title='Web app. traffic of a month, forecasting the next week by Time Series Decomposition')
+
+let min_t = datetime(2020-03-27);
+let max_t = datetime(2020-04-01 22:00);
+let dt = 2h;
+let horizon=7d;
+opcDataFlat
+| make-series num=avg(todouble(Value)) on TimeStamp from min_t to max_t+horizon step dt by Key
+| extend offset=case(Key=='Random.Int1', 4000000, 0)   //  add artificial offset for easy visualization of multiple time series
+| extend num=series_add(num, offset)
+| extend forecast = series_decompose_forecast(num, toint(horizon/dt))
+| render timechart with(title='Web app. traffic of a month, forecasting the next week for 3 time series')
+
+
+let min_peak_t=datetime(2020-03-28 00:20:00);
+let max_peak_t=datetime(2020-03-28 08:20:05);
+opcDataFlat
+| where TimeStamp between(min_peak_t..max_peak_t)
+| count
+
+let min_peak_t=datetime(2020-03-27 00:00:00);
+let max_peak_t=datetime(2020-04-01 08:20:05);
+opcDataFlat
+| where TimeStamp  between(min_peak_t..max_peak_t)
+| evaluate autocluster()
+
+let min_peak_t=datetime(2020-03-27 00:00:00);
+let max_peak_t=datetime(2020-04-01 08:20:05);
+opcDataFlat
+| where TimeStamp  between(min_peak_t..max_peak_t)
+| evaluate basket()
+
+let min_peak_t=datetime(2020-03-27 00:00:00);
+let max_peak_t=datetime(2020-04-01 08:20:05);
+let min_baseline_t=datetime(2020-03-27 00:00:00);
+let max_baseline_t=datetime(2020-04-01 08:20:05); // Leave a gap between the baseline and the spike to avoid the transition zone.
+let splitime=(max_baseline_t+min_peak_t)/2.0;
+opcDataFlat
+| where (TimeStamp  between(min_baseline_t..max_baseline_t)) or
+        (TimeStamp between(min_peak_t..max_peak_t))
+| extend AB=iff(TimeStamp > splitime, 'Anomaly', 'Baseline')
+| evaluate diffpatterns(AB, 'Anomaly', 'Baseline')
+
+opcDataFlat
+| project TimeStamp, Key, todouble(Value)
+| where Key == "Random.Int1"
+
+opcDataFlat
+| count
+
+opcDataFlat
+| where Key == "Random.Int1"
+| order by TimeStamp
+| summarize TimeStamp=max(TimeStamp), avgValue=min(Value) by bin(TimeStamp, 1m)
+| project TimeStamp, avgValue
+| render timechart with(ycolumns = avgValue, series = TimeStamp)
+
+opcDataFlat
+| where Key == "Random.Int1"
+| order by TimeStamp
+| summarize tstamp=max(TimeStamp), avgValue=min(Value) by bin(TimeStamp, 1m)
+| project tstamp, avgValue
+|render table 
+
+opcDataFlat
+| where Key == "Random.Int1"
+| order by TimeStamp
+| summarize Key=min(Key), Value=min(Value) by bin(TimeStamp, 1m)
+| project TimeStamp, Key, Value
+| render timechart 
+
+
+// Create table command
+////////////////////////////////////////////////////////////
+.create table ['kepwaresample_stage']  (['values']:dynamic, ['timestamp']:datetime)
+
+// Set 0d retention on stage table so that the data is deleted after its transformed
+.alter-merge table kepwaresample_stage policy retention softdelete = 0d
+
+// Create mapping command
+////////////////////////////////////////////////////////////
+.create-or-alter table ['kepwaresample_stage'] ingestion json mapping 'kepwaresample_stage_mapping' '[{"column":"values","path":"$.values","datatype":"dynamic"},{"column":"timestamp","path":"$.timestamp","transform":"DateTimeFromUnixMilliseconds"}]'
+
+//create function to extract the data from JSON 
+.create-or-alter function TransformKepWareLogs()
+{ 
+kepwaresample_stage
+| mv-expand values
+| project 
+msg_timestamp=timestamp,
+metric_timestamp=unixtime_milliseconds_todatetime(tolong(values.t)),
+metric_id=tostring(values.id), 
+metric_value=tostring(values.v),
+metric_quality=tobool(values.q)
+}
+
+//create the final table that will hold the extracted data
+.create table kepwaresample (msg_timestamp: datetime, metric_timestamp: datetime, metric_id: string, metric_value: string, metric_quality: bool) 
+
+//Create update policy to bind the stabing table, function, and the destination table 
+.alter table kepwaresample policy update
+@'[{"IsEnabled": true, "Source": "kepwaresample_stage", "Query": "TransformKepWareLogs()", "IsTransactional": true, "PropagateIngestionProperties": true}]'
+
+
+// Ingest data into table command
+///////////////////////////////////////////////////////////
+.ingest async into table ['kepwaresample_stage'] ('https://kkgkstrldkustodemo00.blob.core.windows.net/pbp-20200413-temp-e5c334ee145d4b43a3a2d3a96fbac1df/1586805347662_kepwaresample.json?sv=2018-03-28&sr=c&sig=uvob%2BuNmKN1FeDFo983Ldft0Z%2BNputQhYQYad9nZWbE%3D&st=2020-04-13T18%3A15%3A47Z&se=2020-04-17T19%3A15%3A47Z&sp=rwdl') with (format='multijson',ingestionMappingReference='kepwaresample_stage_mapping',ingestionMappingType='Json',tags="['229fee5c-508d-4f26-99ae-3f2d007c813f']")
+
+.show operations 2d8b2cbc-2bf1-496b-99f0-75ed6fb1ee8f
+
+kepwaresample
+| limit 100
+
+

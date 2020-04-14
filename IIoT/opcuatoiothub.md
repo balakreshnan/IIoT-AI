@@ -353,6 +353,155 @@ To query the data please use:
 external_table("opcExternalLongTerm") | take 100
 ```
 
+Now for Kepware or OPC based other clients here is a sample output
+
+```
+[
+    {
+      "timestamp": 1586780606000,
+      "values": [
+        {
+          "id": "Channel1.Device1.Tag1",
+          "v": 250,
+          "q": true,
+          "t": 1586780606000
+        },
+        {
+          "id": "Channel1.Device1.Tag2",
+          "v": 220,
+          "q": true,
+          "t": 1586780606001
+        },
+        {
+          "id": "Channel1.Device1.Tag3",
+          "v": 150,
+          "q": true,
+          "t": 1586780606002
+        }
+      ]
+    },
+    {
+      "timestamp": 1586780606030,
+      "values": [
+        {
+          "id": "Channel1.Device1.Tag1",
+          "v": 255,
+          "q": true,
+          "t": 1586780606031
+        },
+        {
+          "id": "Channel1.Device1.Tag2",
+          "v": 223,
+          "q": true,
+          "t": 1586780606032
+        },
+        {
+          "id": "Channel1.Device1.Tag3",
+          "v": 156,
+          "q": true,
+          "t": 1586780606033
+        }
+      ]
+    },
+    {
+      "timestamp": 1586780606040,
+      "values": [
+        {
+          "id": "Channel1.Device1.Tag1",
+          "v": 251,
+          "q": true,
+          "t": 1586780606041
+        },
+        {
+          "id": "Channel1.Device1.Tag2",
+          "v": 229,
+          "q": true,
+          "t": 1586780606041
+        },
+        {
+          "id": "Channel1.Device1.Tag3",
+          "v": 153,
+          "q": true,
+          "t": 1586780606042
+        }
+      ]
+    },
+    {
+      "timestamp": 1586780606060,
+      "values": [
+        {
+          "id": "Channel1.Device1.Tag1",
+          "v": 252,
+          "q": true,
+          "t": 1586780606061
+        },
+        {
+          "id": "Channel1.Device1.Tag2",
+          "v": 224,
+          "q": true,
+          "t": 1586780606062
+        },
+        {
+          "id": "Channel1.Device1.Tag3",
+          "v": 158,
+          "q": true,
+          "t": 1586780606063
+        }
+      ]
+    }
+  ]
+```
+
+Now to get the flowing through iot hub and then create a consumer group to fork for Azure Data Explorer.
+
+Once in Data explorer it is time to create a data model to push the data in.
+
+```
+// Create table command
+////////////////////////////////////////////////////////////
+.create table ['kepwaresample_stage']  (['values']:dynamic, ['timestamp']:datetime)
+
+// Set 0d retention on stage table so that the data is deleted after its transformed
+.alter-merge table kepwaresample_stage policy retention softdelete = 0d
+
+// Create mapping command
+////////////////////////////////////////////////////////////
+.create-or-alter table ['kepwaresample_stage'] ingestion json mapping 'kepwaresample_stage_mapping' '[{"column":"values","path":"$.values","datatype":"dynamic"},{"column":"timestamp","path":"$.timestamp","transform":"DateTimeFromUnixMilliseconds"}]'
+
+//create function to extract the data from JSON 
+.create-or-alter function TransformKepWareLogs()
+{ 
+kepwaresample_stage
+| mv-expand values
+| project 
+msg_timestamp=timestamp,
+metric_timestamp=unixtime_milliseconds_todatetime(tolong(values.t)),
+metric_id=tostring(values.id), 
+metric_value=tostring(values.v),
+metric_quality=tobool(values.q)
+}
+
+//create the final table that will hold the extracted data
+.create table kepwaresample (msg_timestamp: datetime, metric_timestamp: datetime, metric_id: string, metric_value: string, metric_quality: bool) 
+
+//Create update policy to bind the stabing table, function, and the destination table 
+.alter table kepwaresample policy update
+@'[{"IsEnabled": true, "Source": "kepwaresample_stage", "Query": "TransformKepWareLogs()", "IsTransactional": true, "PropagateIngestionProperties": true}]'
+
+
+// Ingest data into table command
+///////////////////////////////////////////////////////////
+.ingest async into table ['kepwaresample_stage'] ('https://kkgkstrldkustodemo00.blob.core.windows.net/pbp-20200413-temp-e5c334ee145d4b43a3a2d3a96fbac1df/1586805347662_kepwaresample.json?sv=2018-03-28&sr=c&sig=uvob%2BuNmKN1FeDFo983Ldft0Z%2BNputQhYQYad9nZWbE%3D&st=2020-04-13T18%3A15%3A47Z&se=2020-04-17T19%3A15%3A47Z&sp=rwdl') with (format='multijson',ingestionMappingReference='kepwaresample_stage_mapping',ingestionMappingType='Json',tags="['229fee5c-508d-4f26-99ae-3f2d007c813f']")
+
+//from the above run get the id and substitute below here
+.show operations 2d8b2cbc-2bf1-496b-99f0-75ed6fb1ee8f
+
+kepwaresample
+| limit 100
+```
+
+Wait for few mins and see if the data is flowing. If data is flowing then we are all.
+
 ## Condition Based Monitoring / Anomaly Detection
 
 ![alt text](https://github.com/balakreshnan/IIoT-AI/blob/master/IIoT/images/opcuasimualation2.jpg "Architecture")

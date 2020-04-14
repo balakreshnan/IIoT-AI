@@ -1,0 +1,38 @@
+// Create table command
+////////////////////////////////////////////////////////////
+.create table ['kepwaresample_stage']  (['values']:dynamic, ['timestamp']:datetime)
+
+// Set 0d retention on stage table so that the data is deleted after its transformed
+.alter-merge table kepwaresample_stage policy retention softdelete = 0d
+
+// Create mapping command
+////////////////////////////////////////////////////////////
+.create-or-alter table ['kepwaresample_stage'] ingestion json mapping 'kepwaresample_stage_mapping' '[{"column":"values","path":"$.values","datatype":"dynamic"},{"column":"timestamp","path":"$.timestamp","transform":"DateTimeFromUnixMilliseconds"}]'
+
+//create function to extract the data from JSON 
+.create-or-alter function TransformKepWareLogs()
+{ 
+kepwaresample_stage
+| mv-expand values
+| project 
+msg_timestamp=timestamp,
+metric_timestamp=unixtime_milliseconds_todatetime(tolong(values.t)),
+metric_id=tostring(values.id), 
+metric_value=toint(values.v),
+metric_quality=tobool(values.q)
+}
+
+//create the final table that will hold the extracted data
+.create table kepwaresample (msg_timestamp: datetime, metric_timestamp: datetime, metric_id: string, metric_value: int, metric_quality: bool) 
+
+//Create update policy to bind the stabing table, function, and the destination table 
+.alter table kepwaresample policy update
+@'[{"IsEnabled": true, "Source": "kepwaresample_stage", "Query": "TransformKepWareLogs()", "IsTransactional": true, "PropagateIngestionProperties": true}]'
+
+
+// Ingest data into table command
+///////////////////////////////////////////////////////////
+.ingest async into table ['kepwaresample_stage'] ('https://kkgkstrldkustodemo00.blob.core.windows.net/pbp-20200413-temp-e5c334ee145d4b43a3a2d3a96fbac1df/1586805347662_kepwaresample.json?sv=2018-03-28&sr=c&sig=uvob%2BuNmKN1FeDFo983Ldft0Z%2BNputQhYQYad9nZWbE%3D&st=2020-04-13T18%3A15%3A47Z&se=2020-04-17T19%3A15%3A47Z&sp=rwdl') with (format='multijson',ingestionMappingReference='kepwaresample_stage_mapping',ingestionMappingType='Json',tags="['229fee5c-508d-4f26-99ae-3f2d007c813f']")
+
+
+.show operations c3fd4c79-ed06-4274-a586-f7cc0291c95b
