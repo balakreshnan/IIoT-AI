@@ -2,7 +2,7 @@
 
 ## Use Case
 
-Provide a data store for industrial sensor, plc, control systems and other process based systems like MES and other plant floor systems. The system should also have the capability to query the Time Series data collected from various sensors from plant floor. The system can be data source for their dasboard, OEE and Root cause analysis and other quality based use cases.
+Provide a data store for industrial sensor, plc, control systems and other process based systems like MES and other plant floor systems. The system should also have the capability to query the Time Series data collected from various sensors from plant floor. The system can be data source for their dashboard, OEE and Root cause analysis and other quality based use cases.
 
 ## Challenge
 
@@ -144,7 +144,7 @@ Once in Data explorer it is time to create a data model to push the data in.
 
 Azure Data explorer allows us to do charting and trending by writing Kusto queries. Doesn't have the click and go environment. 
 
-But Azure data explorer allow us to bring data from other business systems and then combine that seamlessly with time series data for queiring capability. So we can bring order data, Asset management data from Asset management system or ERP's and join them and build queiries.
+But Azure data explorer allow us to bring data from other business systems and then combine that seamlessly with time series data for querying capability. So we can bring order data, Asset management data from Asset management system or ERP's and join them and build queries.
 
 Azure data explorer also allows us to expand and create our own dashboards using third party tools or custom web sites.
 
@@ -252,7 +252,7 @@ To find failures please use this command
 .show continuous-export opccontinousexport failures
 ```
 
-To enable and diable use the below
+To enable and disable use the below
 
 ```
 .enable continuous-export opccontinousexport
