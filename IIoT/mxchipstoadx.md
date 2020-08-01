@@ -291,6 +291,6 @@ iotcentraltelemetry
 
 Here is the output for all data collected
 
-![alt text](https://github.com/balakreshnan/IIoT-AI/blob/master/IIoT/images/4monthshistory2020.jpg "History")
+![alt text](https://github.com/balakreshnan/IIoT-AI/blob/master/IIoT/images/4monthshistory2020.JPG "History")
 
 Good Luck and Have fun experimenting mxchips and other IoT Devices
