@@ -1,0 +1,36 @@
+﻿#connect cluster('igniteadxsource.eastus2').database('Occupancy')
+
+//
+// Custom UDF to score based on pre-trained model
+//
+.create-or-alter function with (folder = "Python", skipvalidation = "true") classify_sf_OccupDetc(samples:(*), models_tbl:(name:string,timestamp:datetime,model:string), model_name:string, features_cols:dynamic, pred_col:string) {
+    let model_str = toscalar(ML_Models | where name == model_name | top 1 by timestamp desc | project model);
+    let kwargs = pack('smodel', model_str, 'features_cols', features_cols, 'pred_col', pred_col);
+    let code =
+    '\n'
+    'import pickle\n'
+    'import binascii\n'
+    '\n'
+    'smodel = kargs["smodel"]\n'
+    'features_cols = kargs["features_cols"]\n'
+    'pred_col = kargs["pred_col"]\n'
+    'bmodel = binascii.unhexlify(smodel)\n'
+    'clf1 = pickle.loads(bmodel)\n'
+    'df1 = df[features_cols]\n'
+    'predictions = clf1.predict(df1)\n'
+    '\n'
+    'result = df\n'
+    'result[pred_col] = pd.DataFrame(predictions, columns=[pred_col])'
+    '\n'
+    ;
+    samples | evaluate python(typeof(*), code, kwargs)
+} 
+
+
+//Based on the Temp and Humidity - Is the room occupied?
+Thermostats
+| where EnqueuedTimeUTC > ago(15m)
+| extend pred_Occupancy=bool(0)
+| extend CO2=0, HumidityRatio=0
+| invoke classify_sf_OccupDetc(ML_Models, 'Occupancy', pack_array('Temp', 'Humidity', 'BatteryLevel', 'CO2', 'HumidityRatio'), 'pred_Occupancy')
+
