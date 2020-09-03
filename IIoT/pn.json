@@ -1,0 +1,18 @@
+[
+    {
+        "EndpointUrl": "opc.tcp://<SERVER>.westeurope.cloudapp.azure.com:49320",
+        "UseSecurity": false,
+        "OpcNodes": [
+            {
+                "Id": "ns=2;s=SIM.CH1.SIM_CH1_TAG1\\234754a-c63-b9601",
+                "OpcSamplingInterval": 1000,
+                "OpcPublishingInterval": 1000
+            },
+            {
+                "Id": "ns=2;s=SIM.CH1.SIM_CH1_TAG19\\2347798-c63-02601",
+                "OpcSamplingInterval": 1000,
+                "OpcPublishingInterval": 1000
+            }
+        ]
+    }
+]
