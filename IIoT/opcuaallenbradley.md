@@ -68,4 +68,4 @@
 - The above is sample of pn.json that we pass along which has OPC server URI
 - Then the tags and frequency on how to retrieve it
 
-https://github.com/balakreshnan/IIoT-AI/blob/master/IIoT/images/opcua.jpg
+![alt text](https://github.com/balakreshnan/IIoT-AI/blob/master/IIoT/images/opcua.jpg "Architecture")
