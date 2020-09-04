@@ -1,0 +1,57 @@
+[9/4/2020, 7:58:55 AM] Source 'input' had 1 occurrences of kind 'InputDeserializerError.InvalidData' between processing times '2020-09-04T12:58:55.9972701Z' and '2020-09-04T12:58:55.9972701Z'. Could not deserialize the input event(s) from resource 'Partition: [0], Offset: [708200], SequenceNumber: [16], DeviceId: [plcgateway]' as Json. Some possible reasons: 1) Malformed events 2) Input source configured with incorrect serialization format
+
+
+{
+  "Cmd": [
+    "publisher",
+    "--pf=/appdata/pn.json",
+    "--di=60",
+    "--to",
+    "--aa",
+    "--si=10",
+    "--bs=100",
+    "--mm=PubSub",
+    "--me=Json"
+  ],
+  "HostConfig": {
+    "Binds": [
+      "/var/iiotedge:/appdata"
+    ]
+  }
+}
+
+
+
+SELECT
+    *
+INTO
+    outputblob
+FROM
+    input
+
+
+WITH Telemetry AS (
+SELECT        
+        GetMetadataPropertyValue(input, '[IoTHUB].[ConnectionDeviceId]') as DeviceID,
+        input.EventEnqueuedUtcTime AS EntryTime,
+        arrayElement.ArrayIndex AS AIndex, 
+        arrayElement.ArrayValue AS AValue
+
+FROM input
+CROSS APPLY GetArrayElements(input.[Messages]) AS arrayElement  
+), 
+ArrayData AS (
+SELECT 
+       DeviceID,
+       EntryTime,
+       AIndex as ArrayIndex,
+       AValue.id as ArrayID,
+       AValue.v as ArrayValue,
+       AValue.t as ArrayTime
+
+FROM Telemetry
+)
+SELECT 
+       *
+INTO outputblob
+FROM ArrayData
