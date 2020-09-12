@@ -242,6 +242,182 @@ sudo docker logs OPCPublisher
 select * into outputblob from input
 ```
 
+```
+WITH DynamicCTE AS 
+(
+    SELECT   
+        i.PublisherId as deviceid,	
+        i.EventProcessedUtcTime as EventProcessedUtcTime,
+        i.EventEnqueuedUtcTime as EventEnqueuedUtcTime,
+        i.IoTHub.ConnectionDeviceId as ConnectionDeviceId,
+        i.IoTHub.EnqueuedTime as EnqueuedTime,
+        SensorMetadataRecords.ArrayValue.Payload as smKey,
+        SensorMetadataRecords.ArrayValue.Payload as smValue
+    FROM input i
+    CROSS APPLY GetArrayElements(Messages) AS SensorMetadataRecords
+)
+select 
+    deviceid,
+    ConnectionDeviceId,
+    EventProcessedUtcTime,
+    EventEnqueuedUtcTime,
+    EnqueuedTime,
+    smKey,
+    smValue
+    from DynamicCTE
+```
+
 - Run the stream analytics job
 - Validate and see if the data is written in blob storage.
-- More to come...
+- Above query writes one level falttened json file
+- Now lets create azure databricks
+- Create a dev cluster with default setting. i am using 3 nodes for now
+- Create a scala notebook
+- Lets write code to parse the JSON and pull details anad write to Azure database for testing
+- Goal is parse all the tags and corresponding time and value
+- Lets write scala code to parse the JSON
+
+```
+import org.apache.spark.sql.types._                         // include the Spark Types to define our schema
+import org.apache.spark.sql.functions._   
+import org.apache.spark.sql.functions._
+import spark.implicits._
+import spark.sql
+import org.apache.spark.sql.{Row, SaveMode, SparkSession}
+```
+
+- Load sql drivers
+
+```
+Class.forName("com.microsoft.sqlserver.jdbc.SQLServerDriver")
+```
+
+- Configure the blob storage config to read the data
+
+```
+spark.conf.set(
+  "fs.azure.account.key.xxxxxx.blob.core.windows.net",
+  "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx")
+```
+
+- Now set the file path
+
+```
+val jsonpath = "wasbs://container@accountname.blob.core.windows.net/2020/09/08"
+```
+
+```
+val df = spark.read.json(jsonpath)
+display(df)
+```
+
+- now we are expanding the columns
+
+```
+val dfexp = df.select($"ConnectionDeviceId", $"EnqueuedTime", $"EventEnqueuedUtcTime", $"EventProcessedUtcTime", $"deviceid", $"smKey.*")
+display(dfexp)
+```
+
+- display columns
+
+```
+dfexp.columns.foreach( c => println(" - " + c))
+```
+
+- Display the rows for troubleshooting
+
+```
+dfexp.collect().foreach(row => row.toSeq.foreach(col => println("Field Name " + ":" + col)))
+```
+
+- now configure jdbc url and connections string
+
+```
+val jdbcHostname = "servername.database.windows.net"
+val jdbcPort = 1433
+val jdbcDatabase = "dbname"
+
+// Create the JDBC URL without passing in the user and password parameters.
+val jdbcUrl = s"jdbc:sqlserver://${jdbcHostname}:${jdbcPort};database=${jdbcDatabase}"
+
+// Create a Properties() object to hold the parameters.
+import java.util.Properties
+val connectionProperties = new Properties()
+
+connectionProperties.put("user", s"username")
+connectionProperties.put("password", s"password")
+```
+
+- Connect to sql
+
+```
+val driverClass = "com.microsoft.sqlserver.jdbc.SQLServerDriver"
+connectionProperties.setProperty("Driver", driverClass)
+```
+
+```
+val opcusdata = spark.read.jdbc(jdbcUrl, "opcuadata", connectionProperties)
+display(opcusdata)
+```
+
+- Create a class
+
+```
+import java.sql.Timestamp
+
+case class opcusdata(deviceid: String, tagName: String, tagdata: String, tagTime: Timestamp, tagvalue: Double)
+case class opcusdata1(deviceid: String, tagName: String, tagdata: String)
+```
+
+- Now loop Row and Column on each row and then create a record and save to Database.
+
+```
+val cols = dfexp.columns
+val columncount = 0
+
+dfexp.collect().foreach(row => 
+                        {
+                          val columncount = 0
+                          val deviceid = row(0).toString
+                          row.toSeq.zipWithIndex.foreach(col => 
+                                            {
+                                              //println(s"${col._1}" + ": " + col)
+                                              val sourceTimestap = col._1
+                                              val value = col._2
+                                              //println(cols(value) + ": " + sourceTimestap)
+                                              //val deviceid = "plcgateway";
+                                              if(cols(value).startsWith("http://microsoft"))
+                                              {
+                                                if (sourceTimestap != null)
+                                                {
+                                                  val tagName = cols(value)
+                                                  val tagdata = sourceTimestap
+                                                  val tgdata = tagdata.toString.split(",")
+                                                  //val spdata = split(tagdata, ",")
+                                                  val tagTime = tgdata(0).replace("[","")
+                                                  val tagValue = tgdata(1).replace("]","")
+
+                                                  //val data = spark.createDataFrame((deviceid, cols(value), sourceTimestap))
+                                                  //data.write.jdbc(jdbcUrl, "opcuadata", mode="append", connectionProperties)
+                                                  //val opcusdata1 = new opcusdata1(deviceid, tagName, tagdata.toString)
+                                                  val opcusdata1 = new opcusdata(deviceid, tagName, tagdata.toString, Timestamp.valueOf(tagTime.replace("T", " ").replace("Z","")), tagValue.toDouble)
+                                                  val departmentsWithEmployeesSeq1 = Seq(opcusdata1)
+                                                  val df1 = departmentsWithEmployeesSeq1.toDF()
+                                                  df1.write.mode(SaveMode.Append).jdbc(jdbcUrl, "opcuadata", connectionProperties)
+                                                  println(deviceid + ": " + tagName + ": " + tagdata + ":" + tagTime + ": " + tagValue )
+                                                }
+                                                
+                                              }
+                                              
+                                              columncount + 1
+                                            }                                   
+                                           )
+                                            
+                          println("row completed")
+                        })
+```
+- Above code pulls device id
+- Then looks for columns starting with https://microsoft which is how the tag names are specified for simulator
+- Then split the timesstamp and value
+- form the query parameters as data frame and then write to it.
+- More details on optimized load is coming soon.
