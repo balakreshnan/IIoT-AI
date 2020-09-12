@@ -96,10 +96,56 @@ val schema = StructType(
         StructField("EventProcessedUtcTime", StringType),
         StructField("deviceid", StringType),
         StructField("smKey", ArrayType(StructType(Array(
-          StructField("tag", StructType(
-            StructField("SourceTimestamp", StringType, true),
-            StructField("Value", DoubleType, true)
+            StructField("tag", ArrayType(StructType(Array(
+              StructField("SourceTimestamp", StringType, true),
+              StructField("Value", LongType, true)
+              )
+            )              
+            ))
+        )
+        )))
+      )
+    )
+
+// COMMAND ----------
+
+val schema = StructType(
+      Array(
+        StructField("ConnectionDeviceId", StringType),
+        StructField("EnqueuedTime", StringType),
+        StructField("EventEnqueuedUtcTime", StringType),
+        StructField("EventProcessedUtcTime", StringType),
+        StructField("deviceid", StringType),
+        StructField("smKey", ArrayType(StructType(List(
+          StructField("http://microsoft.com/Opc/OpcPlc/#s=FastUInt1", StructType(Array(
+             StructField("SourceTimestamp", StringType, true),
+             StructField("Value", LongType, true)
           )))
+        )
+        )))
+      )
+    )
+
+// COMMAND ----------
+
+val schema = StructType(
+      Array(
+        StructField("ConnectionDeviceId", StringType),
+        StructField("EnqueuedTime", StringType),
+        StructField("EventEnqueuedUtcTime", StringType),
+        StructField("EventProcessedUtcTime", StringType),
+        StructField("deviceid", StringType),
+        StructField("smKey", StructType(Array(
+          StructField("http://microsoft.com/Opc/OpcPlc/#s=FastUInt1", StructType(Array(
+             StructField("SourceTimestamp", StringType, true),
+             StructField("Value", LongType, true)
+          ))
+        ),
+        StructField("http://microsoft.com/Opc/OpcPlc/#s=FastUInt2", StructType(Array(
+             StructField("SourceTimestamp", StringType, true),
+             StructField("Value", LongType, true)
+          ))
+        )
         )))
       )
     )
@@ -111,15 +157,19 @@ val df1 = spark.read.option("multiline", "true").schema(schema).json(jsonpath)
 
 // COMMAND ----------
 
+df1.printSchema
+
+// COMMAND ----------
+
 display(df1)
 
 // COMMAND ----------
 
-df.printSchema
+df1.printSchema
 
 // COMMAND ----------
 
-df.select($"smKey"(0))
+display(df1.select($"smKey.*"))
 
 // COMMAND ----------
 
@@ -145,3 +195,106 @@ display(flattenDF)
 // COMMAND ----------
 
 flattenDF.printSchema
+
+// COMMAND ----------
+
+display(df.select($"smKey.*"))
+
+// COMMAND ----------
+
+val dfexpand = df.select($"ConnectionDeviceId", $"EnqueuedTime", $"EventEnqueuedUtcTime", $"EventProcessedUtcTime", $"deviceid", $"smKey.*")
+
+// COMMAND ----------
+
+display(dfexpand)
+
+// COMMAND ----------
+
+display(df)
+
+// COMMAND ----------
+
+val df10 = df.take(10)
+
+// COMMAND ----------
+
+display(df10)
+
+// COMMAND ----------
+
+import spark.implicits._
+import spark.sql
+import org.apache.spark.sql.{Row, SaveMode, SparkSession}
+
+// COMMAND ----------
+
+df.createGlobalTempView("iiot")
+
+// COMMAND ----------
+
+spark.sql("SELECT * FROM global_temp.iiot limit 10").show()
+
+// COMMAND ----------
+
+val df10 = spark.sql("SELECT * FROM global_temp.iiot limit 10")
+
+// COMMAND ----------
+
+display(df10)
+
+// COMMAND ----------
+
+df10.write.mode(SaveMode.Overwrite).json("wasbs://opcuaincoming@iitostore.blob.core.windows.net/test.json")
+
+// COMMAND ----------
+
+df.select(explode(df("smKey"))).alias("tag").collect()
+
+// COMMAND ----------
+
+val dfexp = df.select($"ConnectionDeviceId", $"EnqueuedTime", $"EventEnqueuedUtcTime", $"EventProcessedUtcTime", $"deviceid", $"smKey.*")
+
+// COMMAND ----------
+
+display(dfexp)
+
+// COMMAND ----------
+
+dfexp.collect().foreach(row => row.toSeq.foreach(col => println(col)))
+
+// COMMAND ----------
+
+dfexp.createOrReplaceTempView("iiot")
+val sqlDF = spark.sql("SELECT * FROM iiot")
+
+// COMMAND ----------
+
+sqlDF.foreach { row => 
+           row.toSeq.foreach{col => println(col) }
+    }
+
+// COMMAND ----------
+
+// MAGIC %sql
+// MAGIC DESCRIBE iiot
+
+// COMMAND ----------
+
+// MAGIC %sql
+// MAGIC select * from iiot
+
+// COMMAND ----------
+
+import org.apache.spark.sql.Column
+
+// COMMAND ----------
+
+dfexp.columns
+
+// COMMAND ----------
+
+dfexp.collect().foreach(row => row.toSeq.foreach(col => println("Field Name " + ":" + col)))
+
+// COMMAND ----------
+
+dfexp.columns.foreach( c => println(" - " + c))
