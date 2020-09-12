@@ -124,13 +124,19 @@ dfexp.collect().foreach(row =>
                                               {
                                                 val tagName = cols(value)
                                                 val tagdata = sourceTimestap
+                                                val tgdata = tagdata.toString.split(",")
+                                                //val spdata = split(tagdata, ",")
+                                                val tagTime = tgdata(0).replace("[","")
+                                                val tagValue = tgdata(1).replace("]","")
+                                              
                                                 //val data = spark.createDataFrame((deviceid, cols(value), sourceTimestap))
                                                 //data.write.jdbc(jdbcUrl, "opcuadata", mode="append", connectionProperties)
-                                                val opcusdata1 = new opcusdata1(deviceid, tagName, tagdata.toString)
+                                                //val opcusdata1 = new opcusdata1(deviceid, tagName, tagdata.toString)
+                                                val opcusdata1 = new opcusdata(deviceid, tagName, tagdata.toString, Timestamp.valueOf(tagTime.replace("T", " ").replace("Z","")), tagValue.toDouble)
                                                 val departmentsWithEmployeesSeq1 = Seq(opcusdata1)
                                                 val df1 = departmentsWithEmployeesSeq1.toDF()
                                                 df1.write.mode(SaveMode.Append).jdbc(jdbcUrl, "opcuadata", connectionProperties)
-                                                println(deviceid + ": " + tagName + ": " + tagdata)
+                                                println(deviceid + ": " + tagName + ": " + tagdata + ":" + tagTime + ": " + tagValue )
                                               }
                                               
                                               columncount + 1
