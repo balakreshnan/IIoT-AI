@@ -369,6 +369,15 @@ case class opcusdata(deviceid: String, tagName: String, tagdata: String, tagTime
 case class opcusdata1(deviceid: String, tagName: String, tagdata: String)
 ```
 
+- create mutable list to store all the data
+
+```
+import scala.collection.mutable.ListBuffer
+import scala.collection._
+
+val list = mutable.MutableList[opcusdata]()
+```
+
 - Now loop Row and Column on each row and then create a record and save to Database.
 
 ```
@@ -403,7 +412,8 @@ dfexp.collect().foreach(row =>
                                                   val opcusdata1 = new opcusdata(deviceid, tagName, tagdata.toString, Timestamp.valueOf(tagTime.replace("T", " ").replace("Z","")), tagValue.toDouble)
                                                   val departmentsWithEmployeesSeq1 = Seq(opcusdata1)
                                                   val df1 = departmentsWithEmployeesSeq1.toDF()
-                                                  df1.write.mode(SaveMode.Append).jdbc(jdbcUrl, "opcuadata", connectionProperties)
+                                                  list += opcusdata1
+                                                  //df1.write.mode(SaveMode.Append).jdbc(jdbcUrl, "opcuadata",connectionProperties)
                                                   println(deviceid + ": " + tagName + ": " + tagdata + ":" + tagTime + ": " + tagValue )
                                                 }
                                                 
@@ -416,8 +426,24 @@ dfexp.collect().foreach(row =>
                           println("row completed")
                         })
 ```
+
 - Above code pulls device id
 - Then looks for columns starting with https://microsoft which is how the tag names are specified for simulator
 - Then split the timesstamp and value
-- form the query parameters as data frame and then write to it.
+- update the list with values.
+- now convert the list to dataframe
+
+```
+list.size
+val dfall = list.toDF()
+display(dfall)
+```
+
+- Now write to database
+
+```
+dfall.write.mode(SaveMode.Append).jdbc(jdbcUrl, "opcuadata", connectionProperties)
+```
+
+- Once completed log into Azure SQL run queries and validate if the data is loaded
 - More details on optimized load is coming soon.
