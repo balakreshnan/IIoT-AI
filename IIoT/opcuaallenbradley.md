@@ -2,7 +2,13 @@
 
 ## Architecture
 
+- Using PLC to Azure Cloud
+
 ![alt text](https://github.com/balakreshnan/IIoT-AI/blob/master/IIoT/images/2080abplc.jpg "Architecture")
+
+- Using Control Logix to Azure Cloud. This option allows to control multiple PLC in Customer Site.
+
+![alt text](https://github.com/balakreshnan/IIoT-AI/blob/master/IIoT/images/5370abcontrollogix.jpg "Architecture")
 
 ## Steps to Connect
 
@@ -446,4 +452,9 @@ dfall.write.mode(SaveMode.Append).jdbc(jdbcUrl, "opcuadata", connectionPropertie
 ```
 
 - Once completed log into Azure SQL run queries and validate if the data is loaded
+
+- Here is the sample data should look like
+
+![alt text](https://github.com/balakreshnan/IIoT-AI/blob/master/IIoT/images/opcuasqlraw.jpg "Architecture")
+
 - More details on optimized load is coming soon.
