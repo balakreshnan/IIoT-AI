@@ -21,7 +21,7 @@ spark.conf.set(
 
 // COMMAND ----------
 
-val jsonpath = "wasbs://opcuaincoming@iitostore.blob.core.windows.net/2020/09/08"
+val jsonpath = "wasbs://opcuaincoming@iitostore.blob.core.windows.net/2020/09/13"
 
 // COMMAND ----------
 
@@ -103,6 +103,32 @@ data.write.jdbc(connectionString, "<TableName>", mode="append")
 
 // COMMAND ----------
 
+//plcgateway: http://microsoft.com/Opc/OpcPlc/#s=FastUInt10: [2020-09-08T16:12:01.6712635Z,596]:2020-09-08T16:12:01.6712635Z: 596
+val opcusdata1 = new opcusdata("plcgateway", "http://microsoft.com/Opc/OpcPlc/#s=FastUInt1", "[2020-09-08T16:12:01.6712635Z,596]", Timestamp.valueOf("2020-09-08T16:12:01.6712635".replace("T", " ")), 596)
+val departmentsWithEmployeesSeq1 = Seq(opcusdata1)
+val dfall = departmentsWithEmployeesSeq1.toDF()
+
+// COMMAND ----------
+
+display(dfall)
+
+// COMMAND ----------
+
+import scala.collection.mutable.ListBuffer
+import scala.collection._
+
+// COMMAND ----------
+
+//var a=List.empty[String, String, String, Timestamp, Double]()
+//var outputList = new ListBuffer[String]();
+val list = mutable.MutableList[opcusdata]()
+
+// COMMAND ----------
+
+dfexp.count
+
+// COMMAND ----------
+
 val cols = dfexp.columns
 val columncount = 0
 
@@ -134,7 +160,9 @@ dfexp.collect().foreach(row =>
                                                   val opcusdata1 = new opcusdata(deviceid, tagName, tagdata.toString, Timestamp.valueOf(tagTime.replace("T", " ").replace("Z","")), tagValue.toDouble)
                                                   val departmentsWithEmployeesSeq1 = Seq(opcusdata1)
                                                   val df1 = departmentsWithEmployeesSeq1.toDF()
-                                                  df1.write.mode(SaveMode.Append).jdbc(jdbcUrl, "opcuadata", connectionProperties)
+                                                  //dfall.union(df1)
+                                                  list += opcusdata1
+                                                  //df1.write.mode(SaveMode.Append).jdbc(jdbcUrl, "opcuadata", connectionProperties)
                                                   println(deviceid + ": " + tagName + ": " + tagdata + ":" + tagTime + ": " + tagValue )
                                                 }
                                                 
@@ -146,3 +174,19 @@ dfexp.collect().foreach(row =>
                                             
                           println("row completed")
                         })
+
+// COMMAND ----------
+
+list.size
+
+// COMMAND ----------
+
+val dfall = list.toDF()
+
+// COMMAND ----------
+
+display(dfall)
+
+// COMMAND ----------
+
+dfall.write.mode(SaveMode.Append).jdbc(jdbcUrl, "opcuadata", connectionProperties)
