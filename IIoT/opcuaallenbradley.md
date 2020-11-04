@@ -1,5 +1,12 @@
 # Connect to Allen Bradly PLC using Azure IoT Edge OPC UA
 
+## Author
+
+- Balamurugan Balakreshnan
+- Joseph Zaccaria
+- Grant Richards
+- Ragu Athinarayanan
+
 ## Industrial IoT
 
 Industrial IoT is different from Regular IoT in terms of volume, velocity and veracity. In IoT scenario the amount of sensors to process is handful, whereas in industrial IoT it could be hundreds and thousands.
