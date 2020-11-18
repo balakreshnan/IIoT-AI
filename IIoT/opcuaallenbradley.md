@@ -73,7 +73,7 @@ Other challenge is what do we do with the data. The way we can find a solution f
 
 - Using Control Logix to Azure Cloud. This option allows to control multiple PLC in Customer Site.
 
-![alt text](https://github.com/balakreshnan/IIoT-AI/blob/master/IIoT/images/5370abcontrollogix1.jpg "Architecture")
+![alt text](https://github.com/balakreshnan/IIoT-AI/blob/master/IIoT/images/5370abcontrollogix1-1.jpg "Architecture")
 
 ## Steps to Connect
 
