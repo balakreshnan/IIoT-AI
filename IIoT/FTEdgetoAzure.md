@@ -94,6 +94,7 @@ Other challenge is what do we do with the data. The way we can find a solution f
 - Configure another source to Azure IoT
 - Need device name
 - Need device connection string
+- Data pushed using mqtt
 - Configure the tags to send
 - Configure the frequency to send in this sample every 10 seconds
 - Save and deploy the gateway to logix controller
