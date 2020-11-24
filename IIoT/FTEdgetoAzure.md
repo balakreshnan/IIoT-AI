@@ -102,6 +102,8 @@ Other challenge is what do we do with the data. The way we can find a solution f
 - Windows IOT 10
 - Open Firewall ports
 
+![alt text](https://github.com/balakreshnan/IIoT-AI/blob/master/IIoT/images/FTEEDge.jpg "Architecture")
+
 ## Azure Cloud Side
 
 - Configure Stream analytics to read from IoT Hub and write to Blob for further process
