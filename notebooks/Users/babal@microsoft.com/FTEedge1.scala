@@ -104,3 +104,9 @@ display(df.select("ConnectionDeviceId", "gatewayData.tag_id", "gatewayData.vqts"
 
 // COMMAND ----------
 
+//display(df.select("ConnectionDeviceId", explode($"gatewayData.tag_id"), "gatewayData.vqts"))
+df.select($"ConnectionDeviceId",posexplode($"gatewayData.tag_id")).show(false)
+
+// COMMAND ----------
+
+df.select($"ConnectionDeviceId", posexplode($"gatewayData.vqts")).show(false)
