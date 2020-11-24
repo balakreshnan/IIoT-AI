@@ -20,10 +20,37 @@ spark.conf.set(
 // COMMAND ----------
 
 val jsonpath = "wasbs://opcuaincoming@iitostore.blob.core.windows.net/2020/11/23/0_e7d51dfce4664331bdd4d984b91bdaed_1.json"
+//val jsonpath = "wasbs://opcuaincoming@iitostore.blob.core.windows.net/2020/11/24/0_77513b49a6264687a6965f0d26c64d75_1.json"
+//val jsonpath = "wasbs://opcuaincoming@iitostore.blob.core.windows.net/2020/11/24/0_c751a98390934ca1b38e0853f510da29_1.json"
 
 // COMMAND ----------
 
-val gwdata = spark.read.json(jsonpath)
+import org.apache.spark.sql.types._
+
+val schema = new StructType()
+  .add("ConnectionDeviceId", StringType)                               // data center where data was posted to Kafka cluster
+  .add("EnqueuedTime", StringType)
+  .add("EventEnqueuedUtcTime", StringType)
+  .add("EventProcessedUtcTime", StringType)
+  .add("gatewayData",                                          // info about the source of alarm
+    ArrayType(                                              // define this as a Map(Key->value)
+      new StructType()
+      .add("mimeType", StringType)
+      .add("tag_id", StringType)
+      .add("vqts", 
+           ArrayType(
+                new StructType()
+                .add("q", DoubleType)
+                .add("t", StringType)
+                .add("v", DoubleType)
+           )
+        )
+      )
+    )
+
+// COMMAND ----------
+
+val gwdata = spark.read.schema(schema).json(jsonpath)
 display(gwdata)
 
 // COMMAND ----------
@@ -77,12 +104,3 @@ display(df.select("ConnectionDeviceId", "gatewayData.tag_id", "gatewayData.vqts"
 
 // COMMAND ----------
 
-val jsDF = dfexp.select($"gatewayData", get_json_object($"gatewayData", "$.tag_id").alias("Tag_id"))
-
-// COMMAND ----------
-
-display(dfexp.select(to_json('gatewayData) as 'c))
-
-// COMMAND ----------
-
-display(dfexp.select(json_tuple('gatewayData, "tag_id") as 'c))
