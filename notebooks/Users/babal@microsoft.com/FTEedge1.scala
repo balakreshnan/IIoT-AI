@@ -28,8 +28,61 @@ display(gwdata)
 
 // COMMAND ----------
 
-val dfexp = gwdata.select($"ConnectionDeviceId", $"EnqueuedTime", $"EventEnqueuedUtcTime", $"EventProcessedUtcTime", $"deviceid", $"gatewayData.*")
+gwdata.printSchema
+
+// COMMAND ----------
+
+val dfexp = gwdata.select($"ConnectionDeviceId", $"EnqueuedTime", $"EventEnqueuedUtcTime", $"EventProcessedUtcTime", $"deviceid", $"gatewayData")
 
 // COMMAND ----------
 
 display(dfexp)
+
+// COMMAND ----------
+
+dfexp.printSchema
+
+// COMMAND ----------
+
+import org.apache.spark.sql.types._
+
+val schema = new StructType()
+  .add("ConnectionDeviceId", StringType)                               // data center where data was posted to Kafka cluster
+  .add("gatewayData",                                          // info about the source of alarm
+    ArrayType(                                              // define this as a Map(Key->value)
+      new StructType()
+      .add("mimeType", StringType)
+      .add("tag_id", StringType)
+      .add("vqts", 
+           ArrayType(
+                new StructType()
+                .add("q", DoubleType)
+                .add("t", StringType)
+                .add("v", DoubleType)
+           )
+        )
+      )
+    )
+
+// COMMAND ----------
+
+val df = spark                  // spark session 
+.read                           // get DataFrameReader
+.schema(schema)                 // use the defined schema above and read format as JSON
+.json(jsonpath) 
+
+// COMMAND ----------
+
+display(df.select("ConnectionDeviceId", "gatewayData.tag_id", "gatewayData.vqts"))
+
+// COMMAND ----------
+
+val jsDF = dfexp.select($"gatewayData", get_json_object($"gatewayData", "$.tag_id").alias("Tag_id"))
+
+// COMMAND ----------
+
+display(dfexp.select(to_json('gatewayData) as 'c))
+
+// COMMAND ----------
+
+display(dfexp.select(json_tuple('gatewayData, "tag_id") as 'c))
