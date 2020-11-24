@@ -104,6 +104,33 @@ Other challenge is what do we do with the data. The way we can find a solution f
 
 ![alt text](https://github.com/balakreshnan/IIoT-AI/blob/master/IIoT/images/FTEEDge.jpg "Architecture")
 
+## Steps to program Compact Logix 5480
+
+- Create CIP driver, should be the local compute module's IP address
+- To get the ip log using monitor and type ipconfig
+- create data source
+- One for the PLC in compact logix 5480 
+- IP usually displayed in the LED display.
+- Create a Model
+- Model can group the tags and apply to different outputs
+- Create a Application
+- Here we are creating IOT Hub
+- Specify the name
+- Specify the device name
+- Use connection string (device)
+- Select configure and select the tags and specify frequency to send
+- Deploy the code
+- Click Enable data flow
+- Save settings
+- Wait for the system should show all green
+- Select Store and Forward - to keep the data if it goes down
+
+![alt text](https://github.com/balakreshnan/IIoT-AI/blob/master/IIoT/images/fte0.jpg "Architecture")
+
+![alt text](https://github.com/balakreshnan/IIoT-AI/blob/master/IIoT/images/fte1.jpg "Architecture")
+
+![alt text](https://github.com/balakreshnan/IIoT-AI/blob/master/IIoT/images/fte2.jpg "Architecture")
+
 ## Azure Cloud Side
 
 - Configure Stream analytics to read from IoT Hub and write to Blob for further process
