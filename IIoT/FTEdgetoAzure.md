@@ -6,6 +6,9 @@
 - Joseph Zaccaria
 - Grant Richards
 - Ragu Athinarayanan
+- Huachao Mao
+- Gaurav Nanda
+
 
 ## Industrial IoT
 
