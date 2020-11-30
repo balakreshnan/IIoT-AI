@@ -1,4 +1,4 @@
-# Connect to Allen Bradly PLC using Azure IoT Edge OPC UA
+# Connect to Allen Bradly PLC using Azure IoT Edge MQTT
 
 ## Author
 
@@ -13,13 +13,9 @@ Industrial IoT is different from Regular IoT in terms of volume, velocity and ve
 
 The frequency of data collected are some time it is 40milli second which could be 40 points a second in one sensor. Usually the 100 millisecond tags or sensors produce 10 points per second. There are also other sensor/tags that can be 1 second or 5 second and longer frequency.
 
-<b>OPC UA </b> is the standard protocol which can used to connect to various others industrial PLC and control systems.
-
 The main challenge is not collecting data from one PLC or Control system. But collecting from hundreds of PLC and Control System per line, and also multiple lines as well.
 
 Given PLC's and control system are manufactured by so many different vendors with properiatry and common standards protocol to communicate are also other challenges.
-
-To augument the above challenge if industry goes with OPC UA, then it makes it easier to integrate and connect and get insights.
 
 Usually the PLC and Control Systems that connect mass producing lines are usually considered as OT - Operational Technology. They live in a separate network with line, in between lines with Factory or Plant or multiple of them. These networks has to be fast to able to communicate between PLC, Sensor and Control system - based on how fast decision are made in PLC, Sensor or Control Systems.
 Control Systems are brain, that connects to multiple PLC's and Sensor's and not only collect data but also sends decision information to PLC, Sensor to take action on.
