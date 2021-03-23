@@ -78,6 +78,16 @@ Other challenge is what do we do with the data. The way we can find a solution f
 - Micro 850 PLC
 - Compact Logix Controller
 
+## Setup Azure Resources
+
+- Create a resource group
+- Choose a region of your choice
+- Create Azure IoT Hub with S1 basic
+- Create a stream analytics job in cloud
+- Create Azure Synapse Workspace account
+- Follow the instruction available in azure docs.
+- Make sure you also setup power bi account
+
 ## Configure Compact Logic 5480
 
 - Download Factory Talk Edge Gateway
