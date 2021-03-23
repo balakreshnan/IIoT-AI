@@ -124,6 +124,8 @@ Other challenge is what do we do with the data. The way we can find a solution f
 - Wait for the system should show all green
 - Select Store and Forward - to keep the data if it goes down
 
+![alt text](https://github.com/balakreshnan/IIoT-AI/blob/master/IIoT/images/purduekit.jpg "Architecture")
+
 ![alt text](https://github.com/balakreshnan/IIoT-AI/blob/master/IIoT/images/fte0.jpg "Architecture")
 
 ![alt text](https://github.com/balakreshnan/IIoT-AI/blob/master/IIoT/images/fte1.jpg "Architecture")
